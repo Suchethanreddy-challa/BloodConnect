@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Bell, ChevronDown, LogOut, Menu, Search } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -45,10 +45,29 @@ export function PortalShell({
   description: string;
   children: ReactNode;
 }) {
-  const { profile, user } = useAuth();
+  const { profile, user, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [noticeOpen, setNoticeOpen] = useState(false);
+  
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate({ to: "/login", replace: true });
+    }
+  }, [user, isLoading, navigate]);
+
+  useEffect(() => {
+    if (user && 'Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, [user]);
+
   const config = portalConfig[role];
+  
+  if (isLoading || !user) {
+    return <div className="min-h-screen bg-ice flex items-center justify-center font-mono text-sm text-ink-soft animate-pulse">Loading workspace...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-ice font-sans text-ink">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(60%_40%_at_80%_0%,oklch(0.559_0.204_262.9/.12),transparent_65%),linear-gradient(oklch(0.207_0.018_250.3/.025)_1px,transparent_1px),linear-gradient(90deg,oklch(0.207_0.018_250.3/.025)_1px,transparent_1px)] bg-[size:auto,36px_36px,36px_36px]" />

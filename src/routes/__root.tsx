@@ -125,6 +125,15 @@ function RootComponent() {
   useEffect(() => {
     const channel = supabase
       .channel('schema-db-changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'blood_requests' }, (payload) => {
+        queryClient.invalidateQueries();
+        if (Notification.permission === 'granted') {
+          new Notification("Urgent Blood Request!", {
+            body: `A new request for ${payload.new.blood_group || 'blood'} is needed at ${payload.new.hospital_name || 'a nearby hospital'}.`,
+            icon: '/pwa-192x192.png'
+          });
+        }
+      })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'blood_requests' }, () => {
         queryClient.invalidateQueries();
       })

@@ -28,6 +28,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
 });
 
+import { TypeaheadInput } from "@/components/shared/TypeaheadInput";
+import { PriorityQueue, calculateDonorPriority } from "@/lib/algorithms";
+
 // Calculate distance between two coordinates in km using Haversine formula
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; 
@@ -207,8 +210,32 @@ export function NearbySearch({ section }: { section: "donors" | "hospitals" | "b
           }
           return { ...r, distanceNum: 9999, distance: "Unknown" };
         });
+        
         allRes = allRes.filter(r => r.distanceNum <= parseFloat(radius));
-        allRes.sort((a, b) => a.distanceNum - b.distanceNum);
+        
+        if (section === "donors") {
+          const pq = new PriorityQueue<any>();
+          allRes.forEach(r => {
+            const exactMatch = bloodGroup === "All" || r.blood_group === bloodGroup;
+            // Note: reliabilityScore and daysSinceLastDonation would normally come from the DB profile.
+            // Using placeholder logic for demonstration
+            const daysSince = 100; // Mock: eligible
+            const reliability = r.is_verified ? 90 : 50; 
+            
+            const score = calculateDonorPriority(r.distanceNum, exactMatch, daysSince, reliability);
+            if (score !== Infinity) {
+              pq.enqueue(r, score);
+            }
+          });
+          
+          const sortedDonors = [];
+          while (!pq.isEmpty()) {
+            sortedDonors.push(pq.dequeue());
+          }
+          allRes = sortedDonors.filter(Boolean);
+        } else {
+          allRes.sort((a, b) => a.distanceNum - b.distanceNum);
+        }
       }
       
       // Deduplicate by ID and roughly by coordinates/name (since we merged multiple sources)
@@ -252,24 +279,19 @@ export function NearbySearch({ section }: { section: "donors" | "hospitals" | "b
             </SelectContent>
           </Select>
         )}
-        <Input 
-          className="max-w-xs bg-white/60" 
+        <TypeaheadInput 
           value={city} 
-          onChange={e => {
-            setCity(e.target.value);
+          onChange={(val) => {
+            setCity(val);
             if (userLoc) setUserLoc(null); // Clear GPS if manual override
-          }} 
-          placeholder="Enter city or area..."
-          list="cities-datalist"
+          }}
+          onSelect={(item) => {
+            if (item._type === 'facility' && item.lat && item.lng) {
+              setSelectedLoc({ lat: item.lat, lng: item.lng });
+            }
+          }}
+          placeholder="Search hospitals, banks, or cities..."
         />
-        <datalist id="cities-datalist">
-          {Array.from(new Set(apData.map(d => d.district).filter(Boolean))).sort().map(d => (
-            <option key={`dist-${d}`} value={d} />
-          ))}
-          {Array.from(new Set(apData.map(d => d.city).filter(Boolean))).sort().map(c => (
-            <option key={`city-${c}`} value={c} />
-          ))}
-        </datalist>
         {userLoc && (
           <Select value={radius} onValueChange={setRadius}>
             <SelectTrigger className="w-32 bg-white/60">

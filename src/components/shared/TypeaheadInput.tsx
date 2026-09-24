@@ -49,7 +49,16 @@ export function TypeaheadInput({
   useEffect(() => {
     if (value && value.length > 1) {
       // O(L) fast retrieval using Trie Algorithm
-      const results = searchTrie.searchPrefix(value, 8);
+      const rawResults = searchTrie.searchPrefix(value, 20); // Get more to filter down
+      // Deduplicate by name to prevent multiple identical city/facility names
+      const seen = new Set();
+      const results = rawResults.filter(item => {
+        const key = item.name?.toLowerCase().trim();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }).slice(0, 8); // Limit back to 8 after deduplication
+
       setSuggestions(results);
       setIsOpen(true);
     } else {

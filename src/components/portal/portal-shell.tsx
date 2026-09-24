@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bell, ChevronDown, LogOut, Menu, Search } from "lucide-react";
-import { useState, useEffect, type ReactNode } from "react";
+import { Bell, ChevronDown, LogOut, Menu, Search, UserRound } from "lucide-react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -49,6 +49,19 @@ export function PortalShell({
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  
+  const noticeRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (noticeRef.current && !noticeRef.current.contains(e.target as Node)) setNoticeOpen(false);
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   
   useEffect(() => {
     const checkAuth = async () => {
@@ -147,18 +160,18 @@ export function PortalShell({
             />
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <div className="relative">
+            <div className="relative" ref={noticeRef}>
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label="Notifications"
-                onClick={() => setNoticeOpen(!noticeOpen)}
+                onClick={() => { setNoticeOpen(!noticeOpen); setProfileOpen(false); }}
               >
                 <Bell />
                 <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-urgent ring-2 ring-ice" />
               </Button>
               {noticeOpen && (
-                <div className="glass absolute right-0 top-11 w-80 rounded-lg p-3 shadow-xl">
+                <div className="glass absolute right-0 top-11 w-80 rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
                   <p className="text-xs font-semibold">Recent notifications</p>
                   <div className="mt-2 space-y-2 text-xs">
                     <p className="rounded-md bg-white/60 p-2">
@@ -171,13 +184,45 @@ export function PortalShell({
                 </div>
               )}
             </div>
-            <Button variant="ghost" className="hidden gap-2 sm:flex">
-              <span className="grid size-7 place-items-center rounded-full bg-ink text-[10px] text-ice">
-                {(profile?.name || user?.user_metadata?.full_name || user?.email || "U").slice(0, 2).toUpperCase()}
-              </span>
-              <span className="max-w-32 truncate text-xs">{profile?.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</span>
-              <ChevronDown className="size-3" />
-            </Button>
+            
+            <div className="relative hidden sm:block" ref={profileRef}>
+              <Button 
+                variant="ghost" 
+                className="flex gap-2"
+                onClick={() => { setProfileOpen(!profileOpen); setNoticeOpen(false); }}
+              >
+                <span className="grid size-7 place-items-center rounded-full bg-ink text-[10px] text-ice">
+                  {(profile?.name || user?.user_metadata?.full_name || user?.email || "U").slice(0, 2).toUpperCase()}
+                </span>
+                <span className="max-w-32 truncate text-xs">{profile?.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</span>
+                <ChevronDown className="size-3" />
+              </Button>
+              
+              {profileOpen && (
+                <div className="glass absolute right-0 top-11 w-48 rounded-lg p-1.5 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
+                  <Link 
+                    to="/$role/profile" 
+                    params={{ role }}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs hover:bg-white/60 transition-colors"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    <UserRound className="size-4" />
+                    My Profile
+                  </Link>
+                  <button 
+                    onClick={async () => {
+                      setProfileOpen(false);
+                      await supabase.auth.signOut();
+                      window.location.href = "/login";
+                    }}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs text-urgent hover:bg-urgent/10 transition-colors mt-1"
+                  >
+                    <LogOut className="size-4" />
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
         <main className="mx-auto max-w-[1440px] px-4 py-7 lg:px-8">

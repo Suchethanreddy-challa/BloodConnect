@@ -24,7 +24,7 @@ export function PatientDashboard() {
     queryKey: ["active_request", user?.id],
     queryFn: async () => {
       if (!user) return null;
-      const { data, error } = await supabase.from("blood_requests").select("*").eq("patient_id", user.id).neq("status", "Fulfilled").neq("status", "Cancelled").order("created_at", { ascending: false }).limit(1).single();
+      const { data, error } = await supabase.from("blood_requests").select("*").eq("patient_id", user.id).neq("status", "Fulfilled").neq("status", "Cancelled").order("created_at", { ascending: false }).limit(1).maybeSingle();
       if (error && error.code !== "PGRST116") throw error; // PGRST116 is no rows found
       return data || null;
     },

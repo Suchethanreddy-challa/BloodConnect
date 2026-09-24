@@ -51,9 +51,16 @@ export function PortalShell({
   const [noticeOpen, setNoticeOpen] = useState(false);
   
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate({ to: "/login", replace: true });
-    }
+    const checkAuth = async () => {
+      if (!isLoading && !user) {
+        // Double check directly to bypass any React state update lag
+        const { data } = await supabase.auth.getSession();
+        if (!data.session) {
+          navigate({ to: "/login", replace: true });
+        }
+      }
+    };
+    checkAuth();
   }, [user, isLoading, navigate]);
 
   useEffect(() => {

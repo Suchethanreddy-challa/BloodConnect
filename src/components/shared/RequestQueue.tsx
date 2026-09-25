@@ -14,7 +14,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
   const { data: requests, isLoading } = useQuery({
     queryKey: ["blood_requests", filter],
     queryFn: async () => {
-      let q = supabase.from("blood_requests").select("id, blood_group, units, urgency, location, status, created_at").order("created_at", { ascending: false });
+      let q = supabase.from("blood_requests").select("id, blood_group, units, urgency, location, status, created_at, patient:profiles!blood_requests_patient_id_fkey(name)").order("created_at", { ascending: false });
       if (filter === "emergency") q = q.eq("urgency", "emergency");
       if (filter === "processing") q = q.in("status", ["searching", "Searching", "Pending Hospital", "pending"]);
       const { data, error } = await q;
@@ -58,7 +58,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
           )}
           {requests?.map((r) => (
             <div key={r.id} className="rounded-lg border border-ink/5 bg-white/45 p-3">
-              <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} timestamp={r.created_at} />
+              <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} timestamp={r.created_at} patientName={r.patient?.name} />
               <div className="mt-3 flex flex-wrap justify-end gap-2">
                 {r.status !== "cancelled" && (
                   <Button

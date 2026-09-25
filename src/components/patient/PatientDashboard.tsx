@@ -64,14 +64,14 @@ export function PatientDashboard() {
   });
 
   const { data: responder } = useQuery({
-    queryKey: ["responder", request?.donor_id],
+    queryKey: ["responder", request?.responder_id],
     queryFn: async () => {
-      if (!request?.donor_id) return null;
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", request.donor_id).single();
+      if (!request?.responder_id) return null;
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", request.responder_id).single();
       if (error) throw error;
       return data;
     },
-    enabled: !!request?.donor_id
+    enabled: !!request?.responder_id
   });
 
   const steps = ["Submitted", "Searching", "Contacted", "Fulfilled"];

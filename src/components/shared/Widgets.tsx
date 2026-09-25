@@ -148,6 +148,7 @@ export function RequestRow({
   urgency = "Urgent",
   status = "Searching",
   timestamp,
+  patientName,
 }: {
   id: string;
   group: string;
@@ -156,6 +157,7 @@ export function RequestRow({
   urgency?: string;
   status?: string;
   timestamp?: string;
+  patientName?: string;
 }) {
   return (
     <div className="grid gap-3 rounded-lg border border-ink/5 bg-white/50 p-3 sm:grid-cols-[auto_1fr_auto] sm:items-center">
@@ -169,7 +171,7 @@ export function RequestRow({
           <StatusBadge status={status} />
         </div>
         <p className="mt-1 text-[11px] text-ink-soft">
-          {units} units · {location}
+          {patientName ? `${patientName} · ` : ""}{units} units · {location}
         </p>
       </div>
       <p className="flex items-center gap-1 text-[10px] text-ink-soft">

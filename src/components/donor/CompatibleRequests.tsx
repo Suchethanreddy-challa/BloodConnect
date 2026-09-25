@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { toast } from "sonner";
 import { UserCheck, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Panel, SectionHead, SafetyNote, RequestRow } from "../shared/Widgets";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -9,9 +11,10 @@ import { useAuth } from "@/lib/useAuth";
 export function CompatibleRequests() {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
+  const [filter, setFilter] = useState("nearby");
 
   const { data: requests, isLoading } = useQuery({
-    queryKey: ["compatible_requests", profile?.blood_group],
+    queryKey: ["compatible_requests", profile?.blood_group, filter],
     queryFn: async () => {
       if (!profile?.blood_group) return [];
       let q = supabase.from("blood_requests")
@@ -24,12 +27,14 @@ export function CompatibleRequests() {
         q = q.or(`blood_group.eq.${profile.blood_group},blood_group.eq.Unknown`);
       }
       
-      // Filter by the donor's city or pincode if available
-      const filters = [];
-      if (profile.city) filters.push(`location.ilike.%${profile.city}%`);
-      if (profile.pincode) filters.push(`location.ilike.%${profile.pincode}%`);
-      if (filters.length > 0) {
-        q = q.or(filters.join(","));
+      // Filter by the donor's city or pincode if available and 'nearby' is selected
+      if (filter === "nearby") {
+        const filters = [];
+        if (profile.city) filters.push(`location.ilike.%${profile.city}%`);
+        if (profile.pincode) filters.push(`location.ilike.%${profile.pincode}%`);
+        if (filters.length > 0) {
+          q = q.or(filters.join(","));
+        }
       }
 
       const { data, error } = await q;
@@ -57,8 +62,16 @@ export function CompatibleRequests() {
       </div>
       <Panel>
         <SectionHead
-          title="Compatible nearby requests"
+          title="Compatible requests"
           note="Patient information is limited to what you need for safe coordination."
+          action={
+            <Tabs value={filter} onValueChange={setFilter}>
+              <TabsList>
+                <TabsTrigger value="nearby">Nearby</TabsTrigger>
+                <TabsTrigger value="all">Everywhere</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          }
         />
         <div className="space-y-3">
           {isLoading && <Loader2 className="animate-spin text-ink-soft mx-auto size-5 mt-4" />}

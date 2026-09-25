@@ -76,7 +76,7 @@ function SectionRouter({ role, section }: { role: Role; section: string }) {
     return <ReviewQueue suspicious={section === "suspicious"} />;
   if (section === "audit-logs") return <AuditLogs />;
   if (section === "settings") return <SettingsPage />;
-  if (section === "requests") return <DataTable kind="requests" />;
+  if (section === "requests") return <RequestQueue institution="admin" />;
   return <DataTable kind={section} />;
 }
 

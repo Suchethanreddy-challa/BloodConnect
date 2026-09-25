@@ -19,6 +19,7 @@ export function Inventory() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [localUnits, setLocalUnits] = useState<Record<string, number>>({});
+  const [editingGroup, setEditingGroup] = useState<string | null>(null);
 
   const { data: inventory, isLoading } = useQuery({
     queryKey: ["inventory", user?.id],
@@ -109,10 +110,27 @@ export function Inventory() {
                 >
                   <Minus />
                 </Button>
-                <p className="text-center text-3xl font-bold">
-                  {count}
-                  <span className="block text-[9px] font-normal text-ink-soft">units</span>
-                </p>
+                {editingGroup === g ? (
+                  <input
+                    type="number"
+                    autoFocus
+                    min={0}
+                    value={count === 0 ? '' : count}
+                    className="w-20 text-center text-3xl font-bold bg-white/50 border border-input rounded p-1 outline-none focus:ring-2 focus:ring-ring"
+                    onChange={(e) => setLocalUnits(prev => ({ ...prev, [g]: parseInt(e.target.value) || 0 }))}
+                    onBlur={() => setEditingGroup(null)}
+                    onKeyDown={(e) => e.key === 'Enter' && setEditingGroup(null)}
+                  />
+                ) : (
+                  <p 
+                    className="text-center text-3xl font-bold cursor-text hover:bg-black/5 rounded px-4 py-1 transition-colors"
+                    onClick={() => setEditingGroup(g)}
+                    title="Click to edit"
+                  >
+                    {count}
+                    <span className="block text-[9px] font-normal text-ink-soft">units</span>
+                  </p>
+                )}
                 <Button
                   size="icon"
                   variant="outline"

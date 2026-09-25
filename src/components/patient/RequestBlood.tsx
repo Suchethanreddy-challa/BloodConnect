@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Check, ChevronRight, FileUp, Loader2 } from "lucide-react";
+import { Check, ChevronRight, FileUp, Loader2, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { Panel, SectionHead, SafetyNote } from "../shared/Widgets";
 import { bloodGroups } from "../portal/portal-config";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -51,6 +54,7 @@ export function RequestBlood() {
   const [urgency, setUrgency] = useState("urgent");
   const [hospitalId, setHospitalId] = useState("");
   const [hospitalName, setHospitalName] = useState("");
+  const [hospitalComboboxOpen, setHospitalComboboxOpen] = useState(false);
   const [city, setCity] = useState(profile?.city || "");
   const [validUntil, setValidUntil] = useState("");
 
@@ -138,6 +142,14 @@ export function RequestBlood() {
             className="grid gap-4 sm:grid-cols-2"
             onSubmit={(e) => {
               e.preventDefault();
+              if (profile?.role !== "blood-bank" && profile?.role !== "hospital" && !hospitalId) {
+                toast.error("Please select a hospital");
+                return;
+              }
+              if (hospitalId === "_unregistered" && !hospitalName) {
+                toast.error("Please enter the hospital name");
+                return;
+              }
               requestMutation.mutate();
             }}
           >
@@ -175,17 +187,68 @@ export function RequestBlood() {
             </Field>
             {profile?.role !== "blood-bank" && profile?.role !== "hospital" && (
               <Field label="Select Hospital (Required)">
-                <Select required value={hospitalId} onValueChange={setHospitalId}>
-                  <SelectTrigger className={field}>
-                    <SelectValue placeholder="Select registered hospital" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_unregistered">Not listed (Manual entry)</SelectItem>
-                    {registeredHospitals?.map((h: any) => (
-                      <SelectItem key={h.id} value={h.id}>{h.name}{h.city ? ` (${h.city})` : ""}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Popover open={hospitalComboboxOpen} onOpenChange={setHospitalComboboxOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={hospitalComboboxOpen}
+                      className={`w-full justify-between font-normal hover:bg-white/60 ${field} ${!hospitalId && "text-muted-foreground"}`}
+                    >
+                      <span className="truncate">
+                        {hospitalId === "_unregistered" 
+                          ? "Not listed (Manual entry)"
+                          : hospitalId 
+                            ? (registeredHospitals?.find(h => h.id === hospitalId) ? `${registeredHospitals.find(h => h.id === hospitalId).name}${registeredHospitals.find(h => h.id === hospitalId).city ? ` (${registeredHospitals.find(h => h.id === hospitalId).city})` : ""}` : "Select hospital...")
+                            : "Select registered hospital"}
+                      </span>
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Search hospitals..." />
+                      <CommandEmpty>No hospital found.</CommandEmpty>
+                      <CommandList>
+                        <CommandGroup>
+                          <CommandItem
+                            value="_unregistered"
+                            onSelect={(currentValue) => {
+                              setHospitalId("_unregistered");
+                              setHospitalComboboxOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                hospitalId === "_unregistered" ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            Not listed (Manual entry)
+                          </CommandItem>
+                          {registeredHospitals?.map((h: any) => (
+                            <CommandItem
+                              key={h.id}
+                              value={`${h.name} ${h.city || ""}`}
+                              onSelect={(currentValue) => {
+                                setHospitalId(h.id);
+                                setHospitalComboboxOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  hospitalId === h.id ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {h.name}{h.city ? ` (${h.city})` : ""}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 {hospitalId === "_unregistered" && (
                   <>
                     <Input 

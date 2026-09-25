@@ -96,7 +96,29 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
                     )}
                   </>
                 ) : (
-                  <p className="text-[10px] text-ink-soft uppercase tracking-wider py-1 font-semibold">Your Request</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-ink-soft uppercase tracking-wider py-1 font-semibold mr-2">Your Request</span>
+                    {r.status !== "Cancelled" && r.status !== "Fulfilled" && (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateStatus.mutate({ id: r.id, status: "Cancelled" })}
+                          disabled={updateStatus.isPending}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="bg-ok text-white hover:bg-ok/90"
+                          onClick={() => updateStatus.mutate({ id: r.id, status: "Fulfilled" })}
+                          disabled={updateStatus.isPending}
+                        >
+                          Close (Found Blood)
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

@@ -74,15 +74,15 @@ export function RequestBlood() {
   const requestMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Must be logged in");
-      const isBank = profile?.role === "blood-bank";
+      const isVerifiedFacility = profile?.role === "blood-bank" || profile?.role === "hospital";
       const { data, error } = await supabase.from("blood_requests").insert({
         patient_id: user.id,
         blood_group: bloodGroup,
         units,
         urgency,
-        location: isBank ? `${profile.name}, ${city}` : (hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`),
-        hospital_id: isBank ? null : (hospitalId === "_unregistered" ? null : hospitalId),
-        status: isBank ? "Searching" : "Pending Hospital",
+        location: isVerifiedFacility ? `${profile.name}, ${city}` : (hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`),
+        hospital_id: isVerifiedFacility ? (profile?.role === "hospital" ? user.id : null) : (hospitalId === "_unregistered" ? null : hospitalId),
+        status: isVerifiedFacility ? "Searching" : "Pending Hospital",
         valid_until: validUntil || null
       }).select("id").single();
       
@@ -161,7 +161,7 @@ export function RequestBlood() {
                 </SelectContent>
               </Select>
             </Field>
-            {profile?.role !== "blood-bank" && (
+            {profile?.role !== "blood-bank" && profile?.role !== "hospital" && (
               <Field label="Select Hospital (Required)">
                 <Select required value={hospitalId} onValueChange={setHospitalId}>
                   <SelectTrigger className={field}>

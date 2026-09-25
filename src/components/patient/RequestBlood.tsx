@@ -74,14 +74,15 @@ export function RequestBlood() {
   const requestMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Must be logged in");
+      const isBank = profile?.role === "blood-bank";
       const { data, error } = await supabase.from("blood_requests").insert({
         patient_id: user.id,
         blood_group: bloodGroup,
         units,
         urgency,
-        location: hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`,
-        hospital_id: hospitalId === "_unregistered" ? null : hospitalId,
-        status: "Pending Hospital",
+        location: isBank ? `${profile.name}, ${city}` : (hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`),
+        hospital_id: isBank ? null : (hospitalId === "_unregistered" ? null : hospitalId),
+        status: isBank ? "Searching" : "Pending Hospital",
         valid_until: validUntil || null
       }).select("id").single();
       
@@ -160,36 +161,38 @@ export function RequestBlood() {
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Select Hospital (Required)">
-              <Select required value={hospitalId} onValueChange={setHospitalId}>
-                <SelectTrigger className={field}>
-                  <SelectValue placeholder="Select registered hospital" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="_unregistered">Not listed (Manual entry)</SelectItem>
-                  {registeredHospitals?.map((h: any) => (
-                    <SelectItem key={h.id} value={h.id}>{h.name} ({h.city})</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {hospitalId === "_unregistered" && (
-                <>
-                  <Input 
-                    required 
-                    className={`mt-2 ${field}`} 
-                    placeholder="Search or enter hospital name..." 
-                    value={hospitalName} 
-                    onChange={e => setHospitalName(e.target.value)} 
-                    list="hospital-suggestions"
-                  />
-                  <datalist id="hospital-suggestions">
-                    {apData.filter(d => d.type === 'hospital').map(d => (
-                      <option key={d.id} value={`${d.name} (${d.city || d.district})`} />
+            {profile?.role !== "blood-bank" && (
+              <Field label="Select Hospital (Required)">
+                <Select required value={hospitalId} onValueChange={setHospitalId}>
+                  <SelectTrigger className={field}>
+                    <SelectValue placeholder="Select registered hospital" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_unregistered">Not listed (Manual entry)</SelectItem>
+                    {registeredHospitals?.map((h: any) => (
+                      <SelectItem key={h.id} value={h.id}>{h.name} ({h.city})</SelectItem>
                     ))}
-                  </datalist>
-                </>
-              )}
-            </Field>
+                  </SelectContent>
+                </Select>
+                {hospitalId === "_unregistered" && (
+                  <>
+                    <Input 
+                      required 
+                      className={`mt-2 ${field}`} 
+                      placeholder="Search or enter hospital name..." 
+                      value={hospitalName} 
+                      onChange={e => setHospitalName(e.target.value)} 
+                      list="hospital-suggestions"
+                    />
+                    <datalist id="hospital-suggestions">
+                      {apData.filter(d => d.type === 'hospital').map(d => (
+                        <option key={d.id} value={`${d.name} (${d.city || d.district})`} />
+                      ))}
+                    </datalist>
+                  </>
+                )}
+              </Field>
+            )}
             <Field label="Required date & time">
               <Input required className={field} type="datetime-local" value={validUntil} onChange={e => setValidUntil(e.target.value)} />
             </Field>

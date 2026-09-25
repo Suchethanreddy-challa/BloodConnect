@@ -16,7 +16,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
   const { data: requests, isLoading } = useQuery({
     queryKey: ["blood_requests", filter, user?.id],
     queryFn: async () => {
-      let q = supabase.from("blood_requests").select("id, blood_group, units, urgency, location, status, created_at, patient:profiles!blood_requests_patient_id_fkey(name)").order("created_at", { ascending: false });
+      let q = supabase.from("blood_requests").select("id, patient_id, blood_group, units, urgency, location, status, created_at, patient:profiles!blood_requests_patient_id_fkey(name)").order("created_at", { ascending: false });
       if (institution === "hospital" && user) q = q.eq("hospital_id", user.id);
       if (filter === "emergency") q = q.eq("urgency", "emergency");
       if (filter === "processing") q = q.in("status", ["searching", "Searching", "Pending Hospital", "pending"]);
@@ -66,31 +66,37 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
             <div key={r.id} className="rounded-lg border border-ink/5 bg-white/45 p-3">
               <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} timestamp={r.created_at} patientName={r.patient?.name} />
               <div className="mt-3 flex flex-wrap justify-end gap-2">
-                {r.status !== "Cancelled" && r.status !== "Fulfilled" && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => updateStatus.mutate({ id: r.id, status: "Cancelled" })}
-                    disabled={updateStatus.isPending}
-                  >
-                    Reject
-                  </Button>
-                )}
-                {r.status !== "Fulfilled" && r.status !== "Cancelled" && (
-                  <Button
-                    size="sm"
-                    className="bg-ok text-white hover:bg-ok/90"
-                    onClick={() => {
-                      if (r.status === "Pending Hospital") {
-                        updateStatus.mutate({ id: r.id, status: "Searching" });
-                      } else {
-                        updateStatus.mutate({ id: r.id, status: "Fulfilled", responder_id: user?.id });
-                      }
-                    }}
-                    disabled={updateStatus.isPending}
-                  >
-                    {r.status === "Pending Hospital" ? "Verify & Broadcast" : "Mark Fulfilled"}
-                  </Button>
+                {r.patient_id !== user?.id ? (
+                  <>
+                    {r.status !== "Cancelled" && r.status !== "Fulfilled" && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => updateStatus.mutate({ id: r.id, status: "Cancelled" })}
+                        disabled={updateStatus.isPending}
+                      >
+                        Reject
+                      </Button>
+                    )}
+                    {r.status !== "Fulfilled" && r.status !== "Cancelled" && (
+                      <Button
+                        size="sm"
+                        className="bg-ok text-white hover:bg-ok/90"
+                        onClick={() => {
+                          if (r.status === "Pending Hospital") {
+                            updateStatus.mutate({ id: r.id, status: "Searching" });
+                          } else {
+                            updateStatus.mutate({ id: r.id, status: "Fulfilled", responder_id: user?.id });
+                          }
+                        }}
+                        disabled={updateStatus.isPending}
+                      >
+                        {r.status === "Pending Hospital" ? "Verify & Broadcast" : "Mark Fulfilled"}
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-[10px] text-ink-soft uppercase tracking-wider py-1 font-semibold">Your Request</p>
                 )}
               </div>
             </div>

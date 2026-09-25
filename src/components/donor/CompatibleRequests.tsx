@@ -19,7 +19,8 @@ export function CompatibleRequests() {
       if (!profile?.blood_group) return [];
       let q = supabase.from("blood_requests")
         .select("*")
-        .in("status", ["Pending Hospital", "pending", "Searching", "searching"]);
+        .in("status", ["Pending Hospital", "pending", "Searching", "searching"])
+        .neq("patient_id", user!.id);
         
       if (profile.blood_group === "O-") {
         // O- can donate to anyone, no blood group filter needed

@@ -75,13 +75,25 @@ export function RequestBlood() {
     mutationFn: async () => {
       if (!user) throw new Error("Must be logged in");
       const isVerifiedFacility = profile?.role === "blood-bank" || profile?.role === "hospital";
+      
+      let finalHospitalId = isVerifiedFacility ? (profile?.role === "hospital" ? user.id : null) : (hospitalId === "_unregistered" ? null : hospitalId);
+      let finalLocation = isVerifiedFacility ? `${profile.name}, ${city}` : (hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`);
+      
+      if (!isVerifiedFacility && hospitalId === "_unregistered" && hospitalName) {
+        const match = registeredHospitals?.find((h: any) => `${h.name}${h.city ? ` (${h.city})` : ""}` === hospitalName || h.name === hospitalName);
+        if (match) {
+          finalHospitalId = match.id;
+          finalLocation = `${match.name}, ${city}`;
+        }
+      }
+
       const { data, error } = await supabase.from("blood_requests").insert({
         patient_id: user.id,
         blood_group: bloodGroup,
         units,
         urgency,
-        location: isVerifiedFacility ? `${profile.name}, ${city}` : (hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`),
-        hospital_id: isVerifiedFacility ? (profile?.role === "hospital" ? user.id : null) : (hospitalId === "_unregistered" ? null : hospitalId),
+        location: finalLocation,
+        hospital_id: finalHospitalId,
         status: isVerifiedFacility ? "Searching" : "Pending Hospital",
         valid_until: validUntil || null
       }).select("id").single();

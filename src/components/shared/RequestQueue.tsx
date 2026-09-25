@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Panel, SectionHead, SafetyNote, RequestRow } from "./Widgets";
+import { RequestRowSkeleton, MetricSkeleton } from "../shared/Skeletons";
 import { useAuth } from "@/lib/useAuth";
 
 export function RequestQueue({ institution }: { institution: "hospital" | "blood bank" | "admin" }) {

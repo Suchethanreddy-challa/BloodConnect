@@ -17,6 +17,7 @@ import { useState, useMemo, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { MatchCardSkeleton } from "../shared/Skeletons";
 import { useAuth } from "@/lib/useAuth";
 
 // Fix for default Leaflet markers missing in Vite

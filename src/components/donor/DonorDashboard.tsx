@@ -11,6 +11,7 @@ import {
 } from "../shared/Widgets";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { RequestRowSkeleton, MetricSkeleton } from "../shared/Skeletons";
 import { useAuth } from "@/lib/useAuth";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";

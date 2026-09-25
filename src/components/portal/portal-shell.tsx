@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Bell, ChevronDown, LogOut, Menu, Search, UserRound } from "lucide-react";
 import { useState, useEffect, useRef, type ReactNode } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -96,6 +97,17 @@ export function PortalShell({
       Notification.requestPermission();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!isLoading && profile && role !== "admin") {
+      const isComplete = profile.name && profile.phone && profile.city && profile.pincode && profile.blood_group;
+      const currentPath = window.location.pathname;
+      if (!isComplete && !currentPath.endsWith("/profile")) {
+        toast.error("Please complete your profile details to access this feature.");
+        navigate({ to: `/${role}/profile` as any, replace: true });
+      }
+    }
+  }, [isLoading, profile, role, navigate]);
 
   const config = portalConfig[role];
   

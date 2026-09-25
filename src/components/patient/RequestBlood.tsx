@@ -170,7 +170,7 @@ export function RequestBlood() {
                   <SelectContent>
                     <SelectItem value="_unregistered">Not listed (Manual entry)</SelectItem>
                     {registeredHospitals?.map((h: any) => (
-                      <SelectItem key={h.id} value={h.id}>{h.name} ({h.city})</SelectItem>
+                      <SelectItem key={h.id} value={h.id}>{h.name}{h.city ? ` (${h.city})` : ""}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -186,7 +186,7 @@ export function RequestBlood() {
                     />
                     <datalist id="hospital-suggestions">
                       {apData.filter(d => d.type === 'hospital').map(d => (
-                        <option key={d.id} value={`${d.name} (${d.city || d.district})`} />
+                        <option key={d.id} value={`${d.name}${(d.city || d.district) ? ` (${d.city || d.district})` : ""}`} />
                       ))}
                     </datalist>
                   </>

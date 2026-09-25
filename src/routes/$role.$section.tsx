@@ -13,7 +13,8 @@ import { RequestQueue } from "@/components/shared/RequestQueue";
 
 // Role-specific imports
 import { RequestBlood } from "@/components/patient/RequestBlood";
-import { NearbySearch } from "@/components/patient/NearbySearch";
+import React, { Suspense } from "react";
+const NearbySearch = React.lazy(() => import("@/components/patient/NearbySearch").then(m => ({ default: m.NearbySearch })));
 import { DonorAvailability } from "@/components/donor/DonorAvailability";
 import { CompatibleRequests } from "@/components/donor/CompatibleRequests";
 import { ReviewQueue } from "@/components/admin/ReviewQueue";
@@ -52,7 +53,7 @@ function SectionRouter({ role, section }: { role: Role; section: string }) {
   if (role === "patient") {
     if (section === "request") return <RequestBlood />;
     if (["donors", "hospitals", "blood-banks"].includes(section))
-      return <NearbySearch section={section as "donors" | "hospitals" | "blood-banks"} />;
+      return <Suspense fallback={<div className="p-8 text-center text-ink-soft animate-pulse">Loading map...</div>}><NearbySearch section={section as "donors" | "hospitals" | "blood-banks"} /></Suspense>;
   }
 
   if (role === "donor") {

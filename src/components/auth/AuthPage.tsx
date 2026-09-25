@@ -8,6 +8,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -206,6 +207,13 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
         
         if (updateError) throw updateError;
         navigate({ to: "/$role", params: { role } });
+      } else if (mode === "reset") {
+        const confirmNew = (document.getElementById("confirm-new") as HTMLInputElement).value;
+        if (password !== confirmNew) throw new Error("Passwords do not match");
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        toast.success("Password updated successfully!");
+        navigate({ to: "/login" });
       }
     } catch (err: any) {
       setError(err.message);

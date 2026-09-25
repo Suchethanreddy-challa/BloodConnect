@@ -158,12 +158,35 @@ export function PortalShell({
                 <Menu />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 bg-ice p-0">
+            <SheetContent side="left" className="w-72 bg-ice p-0 flex flex-col">
               <SheetHeader className="border-b p-5">
                 <SheetTitle className="text-left">BloodConnect - {config.label}</SheetTitle>
               </SheetHeader>
-              <div className="py-4">
+              <div className="flex-1 overflow-y-auto py-4">
                 <Navigation role={role} onSelect={() => setMobileOpen(false)} />
+              </div>
+              <div className="m-3 rounded-lg border border-ink/5 bg-white/45 p-3">
+                <div className="flex items-center gap-2">
+                  <span className="grid size-8 place-items-center rounded-full bg-cool/15 text-xs font-semibold">
+                    {(profile?.name || user?.user_metadata?.full_name || user?.email || "U").slice(0, 2).toUpperCase()}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-semibold">{profile?.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</p>
+                    <p className="truncate text-[10px] text-ink-soft capitalize">{profile?.blood_group || role}</p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 w-full justify-start text-ink-soft cursor-pointer"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    window.location.href = "/login";
+                  }}
+                >
+                  <LogOut />
+                  Log out
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
@@ -205,7 +228,7 @@ export function PortalShell({
               )}
             </div>
             
-            <div className="relative hidden sm:block" ref={profileRef}>
+            <div className="relative" ref={profileRef}>
               <Button 
                 variant="ghost" 
                 className="flex gap-2"

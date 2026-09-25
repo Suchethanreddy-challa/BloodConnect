@@ -27,12 +27,15 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
   });
 
   const updateStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { error } = await supabase.from("blood_requests").update({ status }).eq("id", id);
+    mutationFn: async ({ id, status, responder_id }: { id: string; status: string; responder_id?: string }) => {
+      const payload: any = { status };
+      if (responder_id) payload.responder_id = responder_id;
+      const { error } = await supabase.from("blood_requests").update(payload).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["blood_requests"] });
+      queryClient.invalidateQueries({ queryKey: ["history"] });
       toast.success("Request status updated");
     },
     onError: (err: any) => toast.error(err.message),
@@ -63,17 +66,17 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
             <div key={r.id} className="rounded-lg border border-ink/5 bg-white/45 p-3">
               <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} timestamp={r.created_at} patientName={r.patient?.name} />
               <div className="mt-3 flex flex-wrap justify-end gap-2">
-                {r.status !== "cancelled" && r.status !== "fulfilled" && (
+                {r.status !== "Cancelled" && r.status !== "Fulfilled" && (
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => updateStatus.mutate({ id: r.id, status: "cancelled" })}
+                    onClick={() => updateStatus.mutate({ id: r.id, status: "Cancelled" })}
                     disabled={updateStatus.isPending}
                   >
                     Reject
                   </Button>
                 )}
-                {r.status !== "fulfilled" && r.status !== "cancelled" && (
+                {r.status !== "Fulfilled" && r.status !== "Cancelled" && (
                   <Button
                     size="sm"
                     className="bg-ok text-white hover:bg-ok/90"
@@ -81,7 +84,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
                       if (r.status === "Pending Hospital") {
                         updateStatus.mutate({ id: r.id, status: "Searching" });
                       } else {
-                        updateStatus.mutate({ id: r.id, status: "fulfilled" });
+                        updateStatus.mutate({ id: r.id, status: "Fulfilled", responder_id: user?.id });
                       }
                     }}
                     disabled={updateStatus.isPending}

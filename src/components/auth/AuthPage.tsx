@@ -139,7 +139,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
 
     try {
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: ${window.location.origin}/reset-password });
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
         if (error) throw error;
         setSent(true);
       } else if (mode === "login") {

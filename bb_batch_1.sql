@@ -1,0 +1,355 @@
+DO $$ 
+DECLARE 
+  new_uid UUID;
+BEGIN
+
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_54@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Rudhira Voluntary Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Rudhira Voluntary Blood Bank', 'bloodbank_BB_54@bloodconnect.ap', 'blood-bank', 'Tenali', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_55@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Best Rotary Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Best Rotary Blood Bank', 'bloodbank_BB_55@bloodconnect.ap', 'blood-bank', 'Tenali', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_56@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Area Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Area Hospital Blood Bank', 'bloodbank_BB_56@bloodconnect.ap', 'blood-bank', 'Gudivada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_57@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Dr. Pattabhi Red Cross Blood Bank ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Dr. Pattabhi Red Cross Blood Bank ', 'bloodbank_BB_57@bloodconnect.ap', 'blood-bank', 'Machilipatnam', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_58@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Government General Hospital (Repeated)", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Government General Hospital (Repeated)', 'bloodbank_BB_58@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_59@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Government District Headquarters Hospital machilipatnam blood bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Government District Headquarters Hospital machilipatnam blood bank', 'bloodbank_BB_59@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_60@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Rotary Red Cross Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Rotary Red Cross Blood Bank', 'bloodbank_BB_60@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_61@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Vijaya Sri Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Vijaya Sri Blood Bank', 'bloodbank_BB_61@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_62@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Lions Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Lions Blood Bank', 'bloodbank_BB_62@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_63@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "University General Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'University General Hospital Blood Bank', 'bloodbank_BB_63@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_64@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Chaitanya Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Chaitanya Blood Bank', 'bloodbank_BB_64@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_65@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Nagarjuna Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Nagarjuna Hospital Blood Bank', 'bloodbank_BB_65@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_66@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Saint Ann&#39;s Hospital Blood Bank  ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Saint Ann&#39;s Hospital Blood Bank  ', 'bloodbank_BB_66@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_67@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Rotary Red Cross Blood Bank (Repeated)", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Rotary Red Cross Blood Bank (Repeated)', 'bloodbank_BB_67@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_68@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Dr. Pinnamaneni Siddhartha Insitiute of Medical Sciences & Research Foundation (Dr.P.SIMS & RF) Blood Bank  ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Dr. Pinnamaneni Siddhartha Insitiute of Medical Sciences & Research Foundation (Dr.P.SIMS & RF) Blood Bank  ', 'bloodbank_BB_68@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_69@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Bethesda Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Bethesda Blood Bank', 'bloodbank_BB_69@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_70@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Smt CH. Manju Vani Vara Prasad, Lions District 316D Blood Bank ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Smt CH. Manju Vani Vara Prasad, Lions District 316D Blood Bank ', 'bloodbank_BB_70@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_71@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Suraksha Voluntary Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Suraksha Voluntary Blood Bank', 'bloodbank_BB_71@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_72@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s Ayush Nri Lepl Health Care Private Limited  ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s Ayush Nri Lepl Health Care Private Limited  ', 'bloodbank_BB_72@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_73@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Nimra Institute of Medical Sciences ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Nimra Institute of Medical Sciences ', 'bloodbank_BB_73@bloodconnect.ap', 'blood-bank', 'Vijayawada', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_74@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "RCH -II Blood Bank, Area Hospital, Adoni", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'RCH -II Blood Bank, Area Hospital, Adoni', 'bloodbank_BB_74@bloodconnect.ap', 'blood-bank', 'Adoni', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_75@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Indian Red Cross Society Blood Bank RCH 2", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Indian Red Cross Society Blood Bank RCH 2', 'bloodbank_BB_75@bloodconnect.ap', 'blood-bank', 'Adoni', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_76@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Government General Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Government General Hospital Blood Bank', 'bloodbank_BB_76@bloodconnect.ap', 'blood-bank', 'Kurnool', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_77@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Indian Red Cross Society Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Indian Red Cross Society Blood Bank', 'bloodbank_BB_77@bloodconnect.ap', 'blood-bank', 'Kurnool', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_78@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Viswa Bharathi General Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Viswa Bharathi General Hospital Blood Bank', 'bloodbank_BB_78@bloodconnect.ap', 'blood-bank', 'Kurnool', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_79@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Viswa Bharathi Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Viswa Bharathi Blood Bank', 'bloodbank_BB_79@bloodconnect.ap', 'blood-bank', 'Kurnool', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_80@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. R.R. Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. R.R. Hospital Blood Bank', 'bloodbank_BB_80@bloodconnect.ap', 'blood-bank', 'Kurnool', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_81@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "District Hospital Blood Bank ", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'District Hospital Blood Bank ', 'bloodbank_BB_81@bloodconnect.ap', 'blood-bank', 'Nandyal', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_82@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Shantiram Medical College & General Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Shantiram Medical College & General Hospital Blood Bank', 'bloodbank_BB_82@bloodconnect.ap', 'blood-bank', 'Nandyal', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_83@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Government Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Government Hospital Blood Bank', 'bloodbank_BB_83@bloodconnect.ap', 'blood-bank', 'Srisailam Project', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_84@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Area Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Area Hospital Blood Bank', 'bloodbank_BB_84@bloodconnect.ap', 'blood-bank', 'Chirala', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_85@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Indian Red Cross Society Blood bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Indian Red Cross Society Blood bank', 'bloodbank_BB_85@bloodconnect.ap', 'blood-bank', 'Markapur', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_86@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. RIMS General Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. RIMS General Hospital Blood Bank', 'bloodbank_BB_86@bloodconnect.ap', 'blood-bank', 'Ongole', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_87@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Indian Red Cross Society Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Indian Red Cross Society Blood Bank', 'bloodbank_BB_87@bloodconnect.ap', 'blood-bank', 'Ongole', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_88@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Life Line Volunytary Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Life Line Volunytary Blood Bank', 'bloodbank_BB_88@bloodconnect.ap', 'blood-bank', 'Ongole', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_89@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Belief Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Belief Blood Bank', 'bloodbank_BB_89@bloodconnect.ap', 'blood-bank', 'Ongole', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_90@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Government Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Government Hospital Blood Bank', 'bloodbank_BB_90@bloodconnect.ap', 'blood-bank', 'Gudur', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_91@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Kanamarlapudi Koteswara Rao Indian Red Cross Society (IRCS) (REPEATED)", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Kanamarlapudi Koteswara Rao Indian Red Cross Society (IRCS) (REPEATED)', 'bloodbank_BB_91@bloodconnect.ap', 'blood-bank', 'Kavali', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_92@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. APVVP Area Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. APVVP Area Hospital Blood Bank', 'bloodbank_BB_92@bloodconnect.ap', 'blood-bank', 'Kavali', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_93@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. Kanamarlapudi Koteswara Rao Indian Red Cross Society Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. Kanamarlapudi Koteswara Rao Indian Red Cross Society Blood Bank', 'bloodbank_BB_93@bloodconnect.ap', 'blood-bank', 'Kavali', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_94@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Indian Red Cross Society Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Indian Red Cross Society Blood Bank', 'bloodbank_BB_94@bloodconnect.ap', 'blood-bank', 'Nellore', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_95@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "District Headquarters Hospital (Repeated)", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'District Headquarters Hospital (Repeated)', 'bloodbank_BB_95@bloodconnect.ap', 'blood-bank', 'Nellore', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_96@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "D.S.R. Headquarters Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'D.S.R. Headquarters Hospital Blood Bank', 'bloodbank_BB_96@bloodconnect.ap', 'blood-bank', 'Nellore', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_97@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Narayana Medical College & Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Narayana Medical College & Hospital Blood Bank', 'bloodbank_BB_97@bloodconnect.ap', 'blood-bank', 'Nellore', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_98@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Gems Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Gems Hospital Blood Bank', 'bloodbank_BB_98@bloodconnect.ap', 'blood-bank', 'Ragolu', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_99@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "GMR Varalakshmi Care Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'GMR Varalakshmi Care Hospital Blood Bank', 'bloodbank_BB_99@bloodconnect.ap', 'blood-bank', 'Rajam', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_100@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Rajiv Gandhi Institute of Medical Sciences (RIMS) General Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Rajiv Gandhi Institute of Medical Sciences (RIMS) General Hospital Blood Bank', 'bloodbank_BB_100@bloodconnect.ap', 'blood-bank', 'Srikakulam', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_101@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "Indian Red Cross Society (IRCS) Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'Indian Red Cross Society (IRCS) Blood Bank', 'bloodbank_BB_101@bloodconnect.ap', 'blood-bank', 'Srikakulam', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_102@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "District Hospital", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'District Hospital', 'bloodbank_BB_102@bloodconnect.ap', 'blood-bank', 'Anakapalli', 'Multiple');
+    
+  new_uid := gen_random_uuid();
+  INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, email_change, email_change_token_new, recovery_token)
+  VALUES (new_uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'bloodbank_BB_103@bloodconnect.ap', crypt('Bank@123', gen_salt('bf')), now(), '{"provider": "email", "providers": ["email"]}', '{"full_name": "M/s. NTR Area Hospital Blood Bank", "role": "blood-bank"}', now(), now(), '', '', '', '');
+  
+  INSERT INTO public.profiles (id, name, email, role, city, blood_group)
+  VALUES (new_uid, 'M/s. NTR Area Hospital Blood Bank', 'bloodbank_BB_103@bloodconnect.ap', 'blood-bank', 'Anakapalli', 'Multiple');
+    END $$;

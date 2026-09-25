@@ -413,9 +413,31 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
               )}
               {(mode === "login" || mode === "register") && (
                 <div>
-                  <Label htmlFor="email" className="text-xs">
-                    Email address
-                  </Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="email" className="text-xs">
+                      Email address
+                    </Label>
+                    {mode === "login" && (
+                      <button type="button" onClick={async () => {
+                        if (typeof window !== 'undefined' && !(window as any).hospitalsData) {
+                          const data = (await import("@/lib/ap_data.json")).default;
+                          (window as any).hospitalsData = data.filter((d: any) => d.type === "hospital");
+                        }
+                        const name = prompt("Enter your hospital name or city to find your login email:");
+                        if (name) {
+                          const found = (window as any).hospitalsData.find((h: any) => h.name.toLowerCase().includes(name.toLowerCase()) || (h.city && h.city.toLowerCase().includes(name.toLowerCase())));
+                          if (found) {
+                            setEmail(`hospital_${found.id}@bloodconnect.ap`);
+                            alert(`Found: ${found.name}\nYour email is set!`);
+                          } else {
+                            alert("Hospital not found.");
+                          }
+                        }
+                      }} className="text-[10px] text-cool hover:underline">
+                        Hospital ID Lookup
+                      </button>
+                    )}
+                  </div>
                   <Input id="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} className="mt-1 bg-white/60" />
                 </div>
               )}

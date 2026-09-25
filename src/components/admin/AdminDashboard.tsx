@@ -14,10 +14,11 @@ export function AdminDashboard() {
   const { data: metrics } = useQuery({
     queryKey: ["admin_metrics"],
     queryFn: async () => {
-      const [profiles, donors, requests] = await Promise.all([
+      const [profiles, donors, requests, reports] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "donor"),
-        supabase.from("blood_requests").select("*").order("created_at", { ascending: true })
+        supabase.from("blood_requests").select("*").order("created_at", { ascending: true }),
+        supabase.from("reports").select("id").eq("status", "pending")
       ]);
       
       const actMap: Record<string, { day: string, requests: number, fulfilled: number }> = {};
@@ -49,16 +50,12 @@ export function AdminDashboard() {
         totalUsers: profiles.count || 0,
         activeDonors: donors.count || 0,
         emergencyRequests: activeEmergency,
+        pendingReviews: reports.data?.length || 0,
         activity: Object.values(actMap)
       };
     }
   });
 
-  const queue = [
-    { label: "Hospital verification", count: 1 },
-    { label: "Repeated emergency requests", count: 0 },
-    { label: "Incorrect account information", count: 2 },
-  ];
 
   return (
     <>
@@ -66,7 +63,7 @@ export function AdminDashboard() {
         <Metric label="Total users" value={metrics?.totalUsers?.toString() || "0"} detail="Registered in system" />
         <Metric label="Active donors" value={metrics?.activeDonors?.toString() || "0"} detail="Verified donors" tone="ok" />
         <Metric label="Emergency requests" value={metrics?.emergencyRequests?.toString() || "0"} detail="Currently searching" tone="urgent" />
-        <Metric label="Pending reviews" value="3" detail="Reports + verifications" tone="warn" />
+        <Metric label="Pending reviews" value={metrics?.pendingReviews?.toString() || "0"} detail="Reports awaiting review" tone="warn" />
       </div>
       <div className="mt-4 grid gap-4 xl:grid-cols-12">
         <Panel className="xl:col-span-8">
@@ -91,18 +88,17 @@ export function AdminDashboard() {
           <SectionHead title="Trust & safety queue" />
           <div className="space-y-2">
             <div className="rounded-lg bg-urgent/8 p-3">
-              <p className="text-xs font-semibold">3 high-priority flags</p>
+              <p className="text-xs font-semibold">{metrics?.pendingReviews || 0} pending reports</p>
               <p className="mt-1 text-[10px] text-ink-soft">
-                Automated signals require human review.
+                User reports require human review.
               </p>
             </div>
-            {queue.map((item, i) => (
-              <div key={item.label} className="flex items-center gap-2 rounded-lg bg-white/50 p-3">
-                <ShieldAlert className={`size-4 ${i === 1 ? "text-urgent" : "text-warn"}`} />
-                <p className="flex-1 text-xs">{item.label}</p>
-                <span className="font-mono text-[10px] text-ink-soft">{item.count}</span>
-              </div>
-            ))}
+            
+            <div className="flex items-center gap-2 rounded-lg bg-white/50 p-3">
+              <ShieldAlert className="size-4 text-warn" />
+              <p className="flex-1 text-xs">Unresolved reports</p>
+              <span className="font-mono text-[10px] text-ink-soft">{metrics?.pendingReviews || 0}</span>
+            </div>
           </div>
         </Panel>
       </div>

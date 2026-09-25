@@ -62,35 +62,39 @@ export function HospitalDashboard() {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const activeEmergency = requests?.filter(r => r.urgency === "emergency").length || 0;
+  const activeCases = requests?.length || 0;
+  const processing = requests?.filter(r => r.status !== "Pending Hospital").length || 0;
+
   return (
     <>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Metric 
           label="Emergency requests" 
-          value="8" 
-          detail="3 awaiting response" 
-          tone="urgent" 
+          value={activeEmergency.toString()} 
+          detail="Requires immediate response" 
+          tone={activeEmergency > 0 ? "urgent" : "ok"} 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "hospital", section: "requests" } })}
         />
         <Metric 
           label="Active cases" 
-          value="21" 
-          detail="Across all departments" 
+          value={activeCases.toString()} 
+          detail="Awaiting fulfillment" 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "hospital", section: "patients" } })}
         />
         <Metric 
           label="Processing" 
-          value="6" 
+          value={processing.toString()} 
           detail="Coordination underway" 
-          tone="warn" 
+          tone={processing > 0 ? "warn" : "ok"} 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "hospital", section: "requests" } })}
         />
         <Metric 
-          label="Fulfilled today" 
-          value="14" 
-          detail="Response median 9 min" 
+          label="Inventory status" 
+          value={stock?.length ? `${stock.reduce((a,c) => a + c.units, 0)} units` : "0 units"} 
+          detail="Total blood available" 
           tone="ok" 
-          onClick={() => navigate({ to: "/$role/$section", params: { role: "hospital", section: "requests" } })}
+          onClick={() => navigate({ to: "/$role/$section", params: { role: "hospital", section: "inventory" } })}
         />
       </div>
       <div className="mt-4 grid gap-4 xl:grid-cols-12">

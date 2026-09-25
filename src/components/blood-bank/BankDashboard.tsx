@@ -45,7 +45,24 @@ export function BankDashboard() {
         q = q.ilike("location", `%${searchTerm}%`);
       }
       
-      const { data, error } = await q.limit(5);
+      const { data, error } = await q;
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!user
+  });
+  
+  const { data: history } = useQuery({
+    queryKey: ["history", "blood-bank", user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const { data, error } = await supabase.from("blood_requests")
+        .select("*")
+        .eq("status", "Fulfilled")
+        .eq("responder_id", user.id)
+        .gte("updated_at", today.toISOString());
       if (error) throw error;
       return data || [];
     },
@@ -59,12 +76,15 @@ export function BankDashboard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["requests"] });
+      queryClient.invalidateQueries({ queryKey: ["history"] });
       toast.success("Request status updated to Fulfilled!");
     },
     onError: (err: any) => toast.error(err.message),
   });
 
   const totalUnits = stock?.reduce((acc, curr) => acc + curr.units, 0) || 0;
+  const lowStockGroups = stock?.filter(s => s.units < 10).map(s => s.group) || [];
+  const activeEmergency = requests?.filter(r => r.urgency === "Urgent").length || 0;
 
   return (
     <>
@@ -77,21 +97,21 @@ export function BankDashboard() {
         />
         <Metric 
           label="Low stock" 
-          value="3" 
-          detail="A−, B− and AB−" 
-          tone="urgent" 
+          value={lowStockGroups.length.toString()} 
+          detail={lowStockGroups.length > 0 ? lowStockGroups.join(", ") : "All groups optimal"} 
+          tone={lowStockGroups.length > 0 ? "urgent" : "ok"} 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "blood-bank", section: "inventory" } })}
         />
         <Metric 
           label="Pending requests" 
-          value="9" 
-          detail="4 marked emergency" 
-          tone="warn" 
+          value={requests?.length.toString() || "0"} 
+          detail={`${activeEmergency} marked emergency`} 
+          tone={activeEmergency > 0 ? "urgent" : (requests?.length ? "warn" : "ok")} 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "blood-bank", section: "requests" } })}
         />
         <Metric 
           label="Fulfilled today" 
-          value="17" 
+          value={history?.length.toString() || "0"} 
           detail="Inventory reconciled" 
           tone="ok" 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "blood-bank", section: "history" } })}
@@ -120,11 +140,12 @@ export function BankDashboard() {
           <SectionHead title="Incoming requests" />
           <div className="space-y-3">
             {!requests?.length ? <p className="text-xs text-ink-soft p-4 text-center">No local requests found.</p> : null}
-            {requests?.map(r => (
+            {requests?.slice(0, 5).map(r => (
               <div key={r.id}>
                 <RequestRow
                   id={r.id.split("-")[0]}
                   group={r.blood_group}
+                  urgency={r.urgency}
                   units={r.units}
                   location={r.location}
                   status={r.status}

@@ -41,8 +41,7 @@ export function HospitalDashboard() {
         .eq("hospital_id", user.id)
         .neq("status", "Fulfilled")
         .neq("status", "Cancelled")
-        .order("created_at", { ascending: false })
-        .limit(10);
+        .order("created_at", { ascending: false });
       
       if (error) throw error;
       return data || [];
@@ -102,11 +101,12 @@ export function HospitalDashboard() {
           <SectionHead title="Priority work queue" note="Emergency requests appear first" />
           <div className="space-y-3">
             {!requests?.length ? <p className="text-xs text-ink-soft p-4 text-center">No local requests found.</p> : null}
-            {requests?.map(r => (
+            {requests?.slice(0, 5).map(r => (
               <div key={r.id}>
                 <RequestRow
                   id={r.id.split("-")[0]}
                   group={r.blood_group}
+                  urgency={r.urgency}
                   units={r.units}
                   location={r.location}
                   status={r.status}

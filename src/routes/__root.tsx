@@ -129,6 +129,12 @@ function RootComponent() {
 
   useEffect(() => {
     const hash = window.location.hash;
+    
+    if (hash && hash.includes("type=recovery")) {
+      window.location.href = "/reset-password" + hash;
+      return;
+    }
+    
     if (hash && hash.includes("error_code=otp_expired")) {
       setTimeout(() => {
         toast.error("Your reset link has expired. Please request a new one.");

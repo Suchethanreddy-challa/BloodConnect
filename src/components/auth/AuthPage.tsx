@@ -162,7 +162,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
             data: {
               role,
               name,
-              blood_group: bloodGroup || "O+",
+              blood_group: (role === "donor" || role === "patient") ? (bloodGroup || "O+") : "Multiple",
               phone,
               city: district,
               pincode,
@@ -182,7 +182,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
             id: data.user!.id,
             role,
             name,
-            blood_group: bloodGroup || "O+", // Default
+            blood_group: (role === "donor" || role === "patient") ? (bloodGroup || "O+") : "Multiple",
             city: district,
             pincode: pincode,
             location: village && district ? `${village}, ${district}, ${stateName}` : null,

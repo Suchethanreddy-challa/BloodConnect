@@ -113,7 +113,7 @@ export function MatchCard({
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-xs font-semibold">{name}</p>
+          <p className="min-w-0 flex-1 truncate text-xs font-semibold">{name}</p>
           <div className="shrink-0"><StatusBadge status={status} /></div>
         </div>
         <p className="mt-0.5 flex items-center gap-1 text-[11px] text-ink-soft">

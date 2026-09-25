@@ -68,7 +68,7 @@ export function TypeaheadInput({
   }, [value]);
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-sm">
+    <div ref={wrapperRef} className="relative flex-1 min-w-[200px] w-full">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-soft" />
         <Input 

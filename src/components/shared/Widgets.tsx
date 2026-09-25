@@ -112,9 +112,10 @@ export function MatchCard({
         {group === "All Groups" ? "ALL" : group}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-semibold">
-          {name} <StatusBadge status={status} />
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="truncate text-xs font-semibold">{name}</p>
+          <div className="shrink-0"><StatusBadge status={status} /></div>
+        </div>
         <p className="mt-0.5 flex items-center gap-1 text-[11px] text-ink-soft">
           <MapPin className="size-3" />
           {type} · approx. {distance}

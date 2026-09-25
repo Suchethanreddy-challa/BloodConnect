@@ -153,6 +153,24 @@ export function DonorDashboard() {
                     </Button>
                   </div>
                 )}
+                
+                <div className="mt-2">
+                  <Button 
+                    size="sm" 
+                    variant="default" 
+                    className="w-full h-8"
+                    onClick={async () => {
+                      const { error } = await supabase.from("blood_requests").update({ status: "Fulfilled" }).eq("id", activeCommitment.id);
+                      if (!error) {
+                        toast.success("Thank you for your donation!");
+                        queryClient.invalidateQueries({ queryKey: ["donor_active_commitment"] });
+                        queryClient.invalidateQueries({ queryKey: ["donor_history"] });
+                      }
+                    }}
+                  >
+                    Mark as Donated
+                  </Button>
+                </div>
               </div>
             </>
           ) : (

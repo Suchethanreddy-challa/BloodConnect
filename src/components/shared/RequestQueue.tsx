@@ -86,7 +86,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
                           if (r.status === "Pending Hospital") {
                             updateStatus.mutate({ id: r.id, status: "Searching" });
                           } else {
-                            updateStatus.mutate({ id: r.id, status: "Fulfilled", responder_id: user?.id });
+                            updateStatus.mutate({ id: r.id, status: "Fulfilled" });
                           }
                         }}
                         disabled={updateStatus.isPending}

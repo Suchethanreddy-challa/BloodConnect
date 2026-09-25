@@ -33,6 +33,9 @@ function Navigation({ role, onSelect }: { role: Role; onSelect?: () => void }) {
 }
 
 import { useAuth } from "@/lib/useAuth";
+import { useQuery } from "@tanstack/react-query";
+
+import { formatDistanceToNow } from "date-fns";
 
 export function PortalShell({
   role,
@@ -50,6 +53,18 @@ export function PortalShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [noticeOpen, setNoticeOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  
+  const { data: notifications } = useQuery({
+    queryKey: ['notifications', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase.from('notifications').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(5);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!user,
+    refetchInterval: 15000
+  });
   
   const noticeRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -168,18 +183,23 @@ export function PortalShell({
                 onClick={() => { setNoticeOpen(!noticeOpen); setProfileOpen(false); }}
               >
                 <Bell />
-                <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-urgent ring-2 ring-ice" />
+                {notifications && notifications.length > 0 && <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-urgent ring-2 ring-ice" />}
               </Button>
               {noticeOpen && (
-                <div className="glass absolute right-0 top-11 w-80 rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
+                <div className="glass absolute right-0 top-11 w-80 max-h-[80vh] overflow-y-auto rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
                   <p className="text-xs font-semibold">Recent notifications</p>
                   <div className="mt-2 space-y-2 text-xs">
-                    <p className="rounded-md bg-white/60 p-2">
-                      A request near you was updated <span className='text-ink-soft'>- 3 min</span>
-                    </p>
-                    <p className="rounded-md bg-white/60 p-2">
-                      Profile verification is current <span className='text-ink-soft'>- 1 hr</span>
-                    </p>
+                    {(!notifications || notifications.length === 0) ? (
+                      <p className="rounded-md bg-white/60 p-2 text-ink-soft text-center">No new notifications</p>
+                    ) : (
+                      notifications.map(n => (
+                        <div key={n.id} className="rounded-md bg-white/60 p-2">
+                          <p className="font-semibold">{n.title}</p>
+                          <p>{n.message}</p>
+                          <p className="text-[9px] text-ink-soft mt-1">{formatDistanceToNow(new Date(n.created_at))} ago</p>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}

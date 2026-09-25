@@ -60,7 +60,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
             <div key={r.id} className="rounded-lg border border-ink/5 bg-white/45 p-3">
               <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} timestamp={r.created_at} patientName={r.patient?.name} />
               <div className="mt-3 flex flex-wrap justify-end gap-2">
-                {r.status !== "cancelled" && (
+                {r.status !== "cancelled" && r.status !== "fulfilled" && (
                   <Button
                     size="sm"
                     variant="outline"
@@ -70,14 +70,20 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
                     Reject
                   </Button>
                 )}
-                {r.status !== "fulfilled" && (
+                {r.status !== "fulfilled" && r.status !== "cancelled" && (
                   <Button
                     size="sm"
-                    className="bg-ok hover:bg-ok/90 text-white"
-                    onClick={() => updateStatus.mutate({ id: r.id, status: "fulfilled" })}
+                    className="bg-ok text-white hover:bg-ok/90"
+                    onClick={() => {
+                      if (r.status === "Pending Hospital") {
+                        updateStatus.mutate({ id: r.id, status: "Searching" });
+                      } else {
+                        updateStatus.mutate({ id: r.id, status: "fulfilled" });
+                      }
+                    }}
                     disabled={updateStatus.isPending}
                   >
-                    Accept / fulfil
+                    {r.status === "Pending Hospital" ? "Verify & Broadcast" : "Mark Fulfilled"}
                   </Button>
                 )}
               </div>

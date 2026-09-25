@@ -36,9 +36,13 @@ export function AdminDashboard() {
         const dayStr = d.toLocaleDateString("en-US", { weekday: "short" });
         if (actMap[dayStr]) {
           actMap[dayStr].requests += 1;
-          if (req.status === "Fulfilled") actMap[dayStr].fulfilled += 1;
+          if (req.status === "Fulfilled" || req.status === "fulfilled") actMap[dayStr].fulfilled += 1;
         }
-        if (req.status === "Searching") activeEmergency++;
+        
+        const isCompleted = req.status === "Fulfilled" || req.status === "fulfilled" || req.status === "cancelled" || req.status === "Cancelled";
+        if (req.urgency === "emergency" && !isCompleted) {
+          activeEmergency++;
+        }
       });
 
       return {

@@ -11,6 +11,7 @@ import { type Role } from "../portal/portal-config";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 
 const field = "h-10 bg-white/60";
 
@@ -45,6 +46,7 @@ export function Profile({ role }: { role: Role }) {
   const org = ["hospital", "blood-bank"].includes(role);
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -170,16 +172,16 @@ export function Profile({ role }: { role: Role }) {
             <p className="mt-1 text-[11px] text-ink-soft mb-3">
               Currently acting as a <strong>{role}</strong>. You can switch roles to {role === 'patient' ? 'donate blood' : 'request blood'} as an individual.
             </p>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full"
-              onClick={async () => {
-                const newRole = role === 'patient' ? 'donor' : 'patient';
-                await supabase.from("profiles").update({ role: newRole }).eq("id", user!.id);
-                window.location.href = `/${newRole}`;
-              }}
-            >
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+                onClick={async () => {
+                  const newRole = role === 'patient' ? 'donor' : 'patient';
+                  await supabase.from("profiles").update({ role: newRole }).eq("id", user!.id);
+                  window.location.href = `/${newRole}`;
+                }}
+              >
               Switch to {role === 'patient' ? 'Donor' : 'Patient'}
             </Button>
           </div>

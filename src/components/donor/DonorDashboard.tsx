@@ -49,7 +49,7 @@ export function DonorDashboard() {
     queryKey: ["donor_history", user?.id],
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase.from("blood_requests").select("*").eq("status", "Fulfilled").order("updated_at", { ascending: false });
+      const { data, error } = await supabase.from("blood_requests").select("*").eq("responder_id", user.id).eq("status", "Fulfilled").order("updated_at", { ascending: false });
       if (error) throw error;
       return data || [];
     },
@@ -201,10 +201,7 @@ export function DonorDashboard() {
                 Donated {h.units} units · {new Date(h.updated_at).toLocaleDateString()}
               </p>
             ))}
-            <p className="flex gap-2">
-              <Activity className="size-4 text-warn" />
-              Availability updated · Today
-            </p>
+            
           </div>
         </Panel>
       </div>

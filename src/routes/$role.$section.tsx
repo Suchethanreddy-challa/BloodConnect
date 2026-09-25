@@ -61,12 +61,14 @@ function SectionRouter({ role, section }: { role: Role; section: string }) {
   }
 
   if (role === "hospital") {
+    if (section === "request") return <RequestBlood />;
+    if (section === "requests") return <RequestQueue institution="hospital" />;
     if (section === "patients") return <DataTable kind="patients" />;
-    return <RequestQueue institution="hospital" />;
   }
 
   if (role === "blood-bank") {
-    return <RequestQueue institution="blood bank" />;
+    if (section === "request") return <RequestBlood />;
+    if (section === "requests") return <RequestQueue institution="blood bank" />;
   }
 
   // Admin

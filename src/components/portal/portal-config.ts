@@ -59,7 +59,8 @@ export const portalConfig: Record<
     subtitle: "Verified facility",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
-      { label: "Blood requests", section: "requests", icon: Siren },
+      { label: "Request blood", section: "request", icon: Siren },
+      { label: "Incoming requests", section: "requests", icon: HeartHandshake },
       { label: "Blood availability", section: "inventory", icon: Droplets },
       { label: "Patients & requests", section: "patients", icon: Users },
       { label: "Notifications", section: "notifications", icon: Bell },
@@ -72,8 +73,9 @@ export const portalConfig: Record<
     subtitle: "Verified organization",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
+      { label: "Request blood", section: "request", icon: Siren },
       { label: "Inventory", section: "inventory", icon: Database },
-      { label: "Requests", section: "requests", icon: Siren },
+      { label: "Incoming requests", section: "requests", icon: HeartHandshake },
       { label: "Request history", section: "history", icon: ClipboardClock },
       { label: "Notifications", section: "notifications", icon: Bell },
       { label: "Profile", section: "profile", icon: Building2 },

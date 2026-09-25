@@ -91,19 +91,19 @@ export function DataTable({ kind }: { kind: string }) {
               <th>Role</th>
               <th>Location</th>
               <th>Verification</th>
-              <th className="text-right">Action</th>
+              {kind !== "patients" && <th className="text-right">Action</th>}
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={5} className="py-8 text-center text-ink-soft">
+                <td colSpan={kind === "patients" ? 4 : 5} className="py-8 text-center text-ink-soft">
                   <Loader2 className="mx-auto size-5 animate-spin" />
                 </td>
               </tr>
             ) : filtered?.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-8 text-center text-ink-soft">
+                <td colSpan={kind === "patients" ? 4 : 5} className="py-8 text-center text-ink-soft">
                   No accounts found.
                 </td>
               </tr>
@@ -123,18 +123,20 @@ export function DataTable({ kind }: { kind: string }) {
                       <span className="text-[10px] text-ink-soft">N/A</span>
                     )}
                   </td>
-                  <td className="text-right">
-                    {(p.role === "hospital" || p.role === "blood-bank") && (
-                      <Button
-                        size="sm"
-                        variant={p.verified_status ? "outline" : "default"}
-                        className={!p.verified_status ? "bg-ok hover:bg-ok/90" : ""}
-                        onClick={() => toggleVerification.mutate({ id: p.id, status: !p.verified_status })}
-                      >
-                        {p.verified_status ? "Revoke" : "Verify"}
-                      </Button>
-                    )}
-                  </td>
+                  {kind !== "patients" && (
+                    <td className="text-right">
+                      {(p.role === "hospital" || p.role === "blood-bank") && (
+                        <Button
+                          size="sm"
+                          variant={p.verified_status ? "outline" : "default"}
+                          className={!p.verified_status ? "bg-ok hover:bg-ok/90" : ""}
+                          onClick={() => toggleVerification.mutate({ id: p.id, status: !p.verified_status })}
+                        >
+                          {p.verified_status ? "Revoke" : "Verify"}
+                        </Button>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))
             )}

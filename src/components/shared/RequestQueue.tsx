@@ -17,7 +17,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
     queryKey: ["blood_requests", filter, user?.id],
     queryFn: async () => {
       let q = supabase.from("blood_requests").select("id, blood_group, units, urgency, location, status, created_at, patient:profiles!blood_requests_patient_id_fkey(name)").order("created_at", { ascending: false });
-      if (institution !== "admin" && user) q = q.eq("hospital_id", user.id);
+      if (institution === "hospital" && user) q = q.eq("hospital_id", user.id);
       if (filter === "emergency") q = q.eq("urgency", "emergency");
       if (filter === "processing") q = q.in("status", ["searching", "Searching", "Pending Hospital", "pending"]);
       const { data, error } = await q;

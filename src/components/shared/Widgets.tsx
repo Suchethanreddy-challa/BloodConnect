@@ -1,6 +1,14 @@
 import { CheckCircle2, Clock3, MapPin, ShieldCheck, TriangleAlert } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+
+export function ClientDate({ date, format = "datetime" }: { date: string, format?: "date"|"time"|"datetime" }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <span className="opacity-0">--</span>;
+  const d = new Date(date);
+  return <span>{format === 'date' ? d.toLocaleDateString() : format === 'time' ? d.toLocaleTimeString() : d.toLocaleString()}</span>;
+}
 
 export function Panel({ children, className = "", onClick }: { children: ReactNode; className?: string, onClick?: () => void }) {
   return <section onClick={onClick} className={cn("glass rounded-lg p-4 sm:p-5", className)}>{children}</section>;

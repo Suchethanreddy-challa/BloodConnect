@@ -145,7 +145,7 @@ export function PortalShell({
             </SheetTrigger>
             <SheetContent side="left" className="w-72 bg-ice p-0">
               <SheetHeader className="border-b p-5">
-                <SheetTitle className="text-left">BloodConnect · {config.label}</SheetTitle>
+                <SheetTitle className="text-left">BloodConnect - {config.label}</SheetTitle>
               </SheetHeader>
               <div className="py-4">
                 <Navigation role={role} onSelect={() => setMobileOpen(false)} />
@@ -175,10 +175,10 @@ export function PortalShell({
                   <p className="text-xs font-semibold">Recent notifications</p>
                   <div className="mt-2 space-y-2 text-xs">
                     <p className="rounded-md bg-white/60 p-2">
-                      A request near you was updated <span className="text-ink-soft">· 3 min</span>
+                      A request near you was updated <span className='text-ink-soft'>- 3 min</span>
                     </p>
                     <p className="rounded-md bg-white/60 p-2">
-                      Profile verification is current <span className="text-ink-soft">· 1 hr</span>
+                      Profile verification is current <span className='text-ink-soft'>- 1 hr</span>
                     </p>
                   </div>
                 </div>

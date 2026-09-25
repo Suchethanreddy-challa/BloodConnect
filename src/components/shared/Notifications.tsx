@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Panel, SectionHead } from "./Widgets";
+import { Panel, SectionHead, ClientDate } from "./Widgets";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
@@ -50,7 +50,7 @@ export function Notifications() {
               <p className={`text-xs ${read.includes(x.id) ? "text-ink-soft" : "font-semibold"}`}>
                 {x.title}: {x.message}
               </p>
-              <p className="mt-1 text-[10px] text-ink-soft">{new Date(x.created_at).toLocaleString()}</p>
+              <p className="mt-1 text-[10px] text-ink-soft"><ClientDate date={x.created_at} format="datetime" /></p>
             </div>
           </button>
         ))}

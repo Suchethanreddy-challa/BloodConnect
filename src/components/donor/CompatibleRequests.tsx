@@ -16,13 +16,20 @@ export function CompatibleRequests() {
       if (!profile?.blood_group) return [];
       let q = supabase.from("blood_requests")
         .select("*")
-        .in("status", ["Pending Hospital", "pending", "Searching", "searching"])
-        .eq("blood_group", profile.blood_group);
+        .in("status", ["Pending Hospital", "pending", "Searching", "searching"]);
+        
+      if (profile.blood_group === "O-") {
+        // O- can donate to anyone, no blood group filter needed
+      } else {
+        q = q.or(`blood_group.eq.${profile.blood_group},blood_group.eq.Unknown`);
+      }
       
       // Filter by the donor's city or pincode if available
-      if (profile.city || profile.pincode) {
-        const searchTerm = profile.pincode || profile.city;
-        q = q.ilike("location", `%${searchTerm}%`);
+      const filters = [];
+      if (profile.city) filters.push(`location.ilike.%${profile.city}%`);
+      if (profile.pincode) filters.push(`location.ilike.%${profile.pincode}%`);
+      if (filters.length > 0) {
+        q = q.or(filters.join(","));
       }
 
       const { data, error } = await q;

@@ -79,7 +79,7 @@ export function RequestBlood() {
         blood_group: bloodGroup,
         units,
         urgency,
-        location: hospitalId === "_unregistered" ? hospitalName : (registeredHospitals?.find(h => h.id === hospitalId)?.name || city),
+        location: hospitalId === "_unregistered" ? `${hospitalName}, ${city}` : `${registeredHospitals?.find(h => h.id === hospitalId)?.name || ""}, ${city}`,
         hospital_id: hospitalId === "_unregistered" ? null : hospitalId,
         status: "Pending Hospital",
         valid_until: validUntil || null

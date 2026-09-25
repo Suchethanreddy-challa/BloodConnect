@@ -30,7 +30,7 @@ export function ReviewQueue({ suspicious }: { suspicious: boolean }) {
       if (suspicious) {
         const { data, error } = await supabase
           .from("suspicious_flags")
-          .select(`*, reported:profiles!user_id(name, email)`)
+          .select(`*, reported:profiles!suspicious_flags_user_id_fkey(name, email)`)
           .order("created_at", { ascending: false });
         if (error) throw error;
         return data;
@@ -39,8 +39,8 @@ export function ReviewQueue({ suspicious }: { suspicious: boolean }) {
           .from("reports")
           .select(`
             *,
-            reporter:profiles!reporter_id(name, email),
-            reported:profiles!reported_user_id(name, email)
+            reporter:profiles!reports_reporter_id_fkey(name, email),
+            reported:profiles!reports_reported_user_id_fkey(name, email)
           `)
           .order("created_at", { ascending: false });
         if (error) throw error;

@@ -52,6 +52,7 @@ export function RequestBlood() {
   const [hospitalId, setHospitalId] = useState("");
   const [hospitalName, setHospitalName] = useState("");
   const [city, setCity] = useState(profile?.city || "");
+  const [validUntil, setValidUntil] = useState("");
 
   const { data: registeredHospitals } = useQuery({
     queryKey: ['registered_hospitals'],
@@ -80,7 +81,8 @@ export function RequestBlood() {
         urgency,
         location: hospitalId === "_unregistered" ? hospitalName : (registeredHospitals?.find(h => h.id === hospitalId)?.name || city),
         hospital_id: hospitalId === "_unregistered" ? null : hospitalId,
-        status: "Pending Hospital"
+        status: "Pending Hospital",
+        valid_until: validUntil || null
       }).select("id").single();
       
       if (error) throw error;
@@ -189,7 +191,7 @@ export function RequestBlood() {
               )}
             </Field>
             <Field label="Required date & time">
-              <Input required className={field} type="datetime-local" />
+              <Input required className={field} type="datetime-local" value={validUntil} onChange={e => setValidUntil(e.target.value)} />
             </Field>
             <Field label="City / area">
               <Input required className={field} placeholder="e.g. Mumbai" value={city} onChange={e => setCity(e.target.value)} list="city-suggestions" />

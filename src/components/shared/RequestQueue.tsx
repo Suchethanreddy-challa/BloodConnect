@@ -16,7 +16,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
     queryFn: async () => {
       let q = supabase.from("blood_requests").select("id, blood_group, units, urgency, location, status, created_at").order("created_at", { ascending: false });
       if (filter === "emergency") q = q.eq("urgency", "emergency");
-      if (filter === "processing") q = q.in("status", ["searching"]); // assuming searching is "processing"
+      if (filter === "processing") q = q.in("status", ["searching", "Searching", "Pending Hospital", "pending"]);
       const { data, error } = await q;
       if (error) throw error;
       return data || [];

@@ -40,17 +40,11 @@ export function SettingsPage() {
       <Panel>
         <SectionHead title="Request controls" />
         <div className="space-y-4">
-          <Field label="Standard request expiry">
-            <Select defaultValue="24">
-              <SelectTrigger className={field}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="12">12 hours</SelectItem>
-                <SelectItem value="24">24 hours</SelectItem>
-                <SelectItem value="48">48 hours</SelectItem>
-              </SelectContent>
-            </Select>
+          <Field label="Request expiration policy">
+            <div className="rounded-lg bg-white/60 p-3 text-xs text-ink-soft">
+              Requests remain active until the user-selected <strong>Required Date & Time</strong>. 
+              If no date is selected or if it passes, the system will mark the request as expired.
+            </div>
           </Field>
           <Field label="Emergency request cooldown">
             <Select defaultValue="30">

@@ -41,6 +41,10 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
   const [district, setDistrict] = useState("");
   const [village, setVillage] = useState("");
   
+  const [showLookup, setShowLookup] = useState(false);
+  const [lookupQuery, setLookupQuery] = useState("");
+  const [lookupResults, setLookupResults] = useState<any[]>([]);
+
   const [districts, setDistricts] = useState<string[]>([]);
   const [villages, setVillages] = useState<any[]>([]);
   
@@ -423,21 +427,54 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
                           const data = (await import("@/lib/ap_data.json")).default;
                           (window as any).hospitalsData = data.filter((d: any) => d.type === "hospital");
                         }
-                        const name = prompt("Enter your hospital name or city to find your login email:");
-                        if (name) {
-                          const found = (window as any).hospitalsData.find((h: any) => h.name.toLowerCase().includes(name.toLowerCase()) || (h.city && h.city.toLowerCase().includes(name.toLowerCase())));
-                          if (found) {
-                            setEmail(`hospital_${found.id}@bloodconnect.ap`);
-                            alert(`Found: ${found.name}\nYour email is set!`);
-                          } else {
-                            alert("Hospital not found.");
-                          }
-                        }
+                        setShowLookup(!showLookup);
+                        setLookupQuery("");
+                        setLookupResults([]);
                       }} className="text-[10px] text-cool hover:underline">
-                        Hospital ID Lookup
+                        {showLookup ? "Cancel Lookup" : "Hospital ID Lookup"}
                       </button>
                     )}
                   </div>
+                  {showLookup && (
+                    <div className="mb-2 mt-2 rounded border border-ink/10 bg-white/50 p-2">
+                      <Input 
+                        placeholder="Search hospital name or city..." 
+                        value={lookupQuery}
+                        onChange={(e) => {
+                          const q = e.target.value;
+                          setLookupQuery(q);
+                          if (q.length > 2) {
+                            const data = (window as any).hospitalsData || [];
+                            setLookupResults(data.filter((h: any) => h.name.toLowerCase().includes(q.toLowerCase()) || (h.city && h.city.toLowerCase().includes(q.toLowerCase()))).slice(0, 10));
+                          } else {
+                            setLookupResults([]);
+                          }
+                        }}
+                        className="mb-2 h-8 text-xs"
+                      />
+                      <div className="flex max-h-32 flex-col gap-1 overflow-y-auto">
+                        {lookupResults.map(h => (
+                          <div 
+                            key={h.id} 
+                            onClick={() => {
+                              setEmail(`hospital_${h.id}@bloodconnect.ap`);
+                              setShowLookup(false);
+                            }}
+                            className="cursor-pointer rounded p-1 text-xs hover:bg-black/5"
+                          >
+                            <span className="font-bold">{h.name}</span>
+                            {h.city && <span className="ml-1 text-ink-soft">({h.city})</span>}
+                          </div>
+                        ))}
+                        {lookupQuery.length > 2 && lookupResults.length === 0 && (
+                          <div className="p-1 text-xs text-ink-soft">No hospitals found.</div>
+                        )}
+                        {lookupQuery.length <= 2 && (
+                          <div className="p-1 text-[10px] text-ink-soft">Type at least 3 characters...</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <Input id="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} className="mt-1 bg-white/60" />
                 </div>
               )}

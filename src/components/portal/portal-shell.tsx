@@ -120,9 +120,7 @@ export function PortalShell({
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(60%_40%_at_80%_0%,oklch(0.559_0.204_262.9/.12),transparent_65%),linear-gradient(oklch(0.207_0.018_250.3/.025)_1px,transparent_1px),linear-gradient(90deg,oklch(0.207_0.018_250.3/.025)_1px,transparent_1px)] bg-[size:auto,36px_36px,36px_36px]" />
       <aside className="glass-soft fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-white/60 md:flex">
         <Link to="/" className="flex h-18 items-center gap-3 border-b border-ink/5 px-5">
-          <span className="grid size-9 place-items-center rounded-lg bg-ink font-mono text-[11px] font-bold text-ice">
-            BC
-          </span>
+          <img src="/logo.jpg" alt="BloodConnect Logo" className="size-9 rounded-lg object-cover" />
           <div>
             <p className="font-semibold">BloodConnect</p>
             <p className="font-mono text-[9px] uppercase tracking-[.16em] text-ink-soft">

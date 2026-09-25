@@ -228,9 +228,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
       <div className="relative grid w-full max-w-5xl overflow-hidden rounded-xl border border-white/70 bg-white/45 shadow-xl backdrop-blur-xl lg:grid-cols-[.8fr_1.2fr]">
         <aside className="hidden bg-ink p-8 text-ice lg:flex lg:flex-col">
           <Link to="/" className="flex items-center gap-2">
-            <span className="grid size-9 place-items-center rounded-lg bg-ice font-mono text-[11px] font-bold text-ink">
-              BC
-            </span>
+            <img src="/logo.jpg" alt="BloodConnect Logo" className="size-9 rounded-lg object-cover" />
             <span className="font-semibold">BloodConnect</span>
           </Link>
           <div className="my-auto">

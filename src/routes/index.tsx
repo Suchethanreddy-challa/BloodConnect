@@ -116,9 +116,7 @@ function Landing() {
       <header className="glass-soft sticky top-0 z-40">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-8 place-items-center rounded-full bg-ink font-mono text-[11px] font-bold text-ice">
-              BC
-            </span>
+            <img src="/logo.jpg" alt="BloodConnect Logo" className="size-8 rounded-full object-cover" />
             <span className="font-semibold tracking-tight">
               Blood<span className="text-ink-soft">Connect</span>
             </span>

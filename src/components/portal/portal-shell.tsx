@@ -219,7 +219,7 @@ export function PortalShell({
                 {notifications && notifications.length > 0 && <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-urgent ring-2 ring-ice" />}
               </Button>
               {noticeOpen && (
-                <div className="glass absolute right-0 top-11 w-80 max-w-[calc(100vw-2rem)] max-h-[80vh] overflow-y-auto rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
+                <div className="glass absolute right-[-4.5rem] sm:right-0 top-11 w-[90vw] sm:w-80 max-w-[320px] max-h-[80vh] overflow-y-auto rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
                   <p className="text-xs font-semibold">Recent notifications</p>
                   <div className="mt-2 space-y-2 text-xs">
                     {(!notifications || notifications.length === 0) ? (

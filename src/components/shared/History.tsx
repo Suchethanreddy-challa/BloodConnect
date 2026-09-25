@@ -33,6 +33,7 @@ export function History({ role }: { role: Role }) {
             units={row.units}
             location={row.location}
             status={row.status}
+            timestamp={row.created_at}
           />
         ))}
       </div>

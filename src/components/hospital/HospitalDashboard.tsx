@@ -106,6 +106,7 @@ export function HospitalDashboard() {
                   units={r.units}
                   location={r.location}
                   status={r.status}
+                  timestamp={r.created_at}
                 />
                 <div className="flex justify-end gap-2 pt-2">
                   {r.status === "Pending Hospital" && (

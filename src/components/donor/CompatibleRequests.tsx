@@ -16,7 +16,7 @@ export function CompatibleRequests() {
       if (!profile?.blood_group) return [];
       let q = supabase.from("blood_requests")
         .select("*")
-        .eq("status", "Searching")
+        .in("status", ["Pending Hospital", "pending", "Searching", "searching"])
         .eq("blood_group", profile.blood_group);
       
       // Filter by the donor's city or pincode if available
@@ -58,7 +58,7 @@ export function CompatibleRequests() {
           {!isLoading && !requests?.length ? <p className="text-xs text-ink-soft p-4 text-center">No compatible requests found at this time.</p> : null}
           {requests?.map((r) => (
             <div key={r.id}>
-              <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} />
+              <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} timestamp={r.created_at} />
               <div className="flex justify-end gap-2 pt-2">
                 <Button
                   variant="outline"

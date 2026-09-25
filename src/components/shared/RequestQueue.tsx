@@ -58,7 +58,7 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
           )}
           {requests?.map((r) => (
             <div key={r.id} className="rounded-lg border border-ink/5 bg-white/45 p-3">
-              <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} />
+              <RequestRow id={r.id.split("-")[0]} group={r.blood_group} units={r.units} location={r.location} urgency={r.urgency === "emergency" ? "Emergency" : r.urgency === "urgent" ? "Urgent" : "Standard"} status={r.status.charAt(0).toUpperCase() + r.status.slice(1)} timestamp={r.created_at} />
               <div className="mt-3 flex flex-wrap justify-end gap-2">
                 {r.status !== "cancelled" && (
                   <Button

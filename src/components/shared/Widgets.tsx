@@ -116,6 +116,22 @@ export function MatchCard({
     </div>
   );
 }
+export function timeAgo(dateString?: string) {
+  if (!dateString) return "Recently";
+  const seconds = Math.floor((new Date().getTime() - new Date(dateString).getTime()) / 1000);
+  let interval = seconds / 31536000;
+  if (interval > 1) return Math.floor(interval) + " years ago";
+  interval = seconds / 2592000;
+  if (interval > 1) return Math.floor(interval) + " months ago";
+  interval = seconds / 86400;
+  if (interval > 1) return Math.floor(interval) + " days ago";
+  interval = seconds / 3600;
+  if (interval > 1) return Math.floor(interval) + " hours ago";
+  interval = seconds / 60;
+  if (interval > 1) return Math.floor(interval) + " minutes ago";
+  return Math.floor(seconds) + " seconds ago";
+}
+
 export function RequestRow({
   id,
   group,
@@ -123,6 +139,7 @@ export function RequestRow({
   location,
   urgency = "Urgent",
   status = "Searching",
+  timestamp,
 }: {
   id: string;
   group: string;
@@ -130,6 +147,7 @@ export function RequestRow({
   location: string;
   urgency?: string;
   status?: string;
+  timestamp?: string;
 }) {
   return (
     <div className="grid gap-3 rounded-lg border border-ink/5 bg-white/50 p-3 sm:grid-cols-[auto_1fr_auto] sm:items-center">
@@ -148,7 +166,7 @@ export function RequestRow({
       </div>
       <p className="flex items-center gap-1 text-[10px] text-ink-soft">
         <Clock3 className="size-3" />
-        12 min ago
+        {timeAgo(timestamp)}
       </p>
     </div>
   );

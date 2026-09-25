@@ -126,6 +126,7 @@ export function PatientDashboard() {
                 units={request.units}
                 location={request.location}
                 status={request.status}
+                timestamp={request.created_at}
               />
               <div className="mt-5 grid grid-cols-4 gap-1 text-center">
                 {steps.map((s, i) => (

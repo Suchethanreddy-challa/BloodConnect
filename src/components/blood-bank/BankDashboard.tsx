@@ -64,12 +64,14 @@ export function BankDashboard() {
     onError: (err: any) => toast.error(err.message),
   });
 
+  const totalUnits = stock?.reduce((acc, curr) => acc + curr.units, 0) || 0;
+
   return (
     <>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Metric 
           label="Total units" 
-          value="74" 
+          value={totalUnits.toString()} 
           detail="Across 8 blood groups" 
           onClick={() => navigate({ to: "/$role/$section", params: { role: "blood-bank", section: "inventory" } })}
         />
@@ -126,6 +128,7 @@ export function BankDashboard() {
                   units={r.units}
                   location={r.location}
                   status={r.status}
+                  timestamp={r.created_at}
                 />
                 <div className="flex justify-end gap-2 pt-2">
                   <Button

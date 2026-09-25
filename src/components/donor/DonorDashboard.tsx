@@ -127,6 +127,7 @@ export function DonorDashboard() {
                   units={r.units}
                   location={r.location}
                   status={r.status}
+                  timestamp={r.created_at}
                 />
                 <div className="flex justify-end pt-2">
                   <Button

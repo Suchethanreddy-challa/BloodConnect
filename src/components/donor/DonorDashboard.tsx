@@ -180,7 +180,10 @@ export function DonorDashboard() {
                 note="Only necessary coordination details are shown"
               />
               <div className="space-y-2">
-                {isLoading && <p className="text-xs text-ink-soft p-4 text-center">Loading...</p>}
+                {isLoading && (<>
+                    <RequestRowSkeleton />
+                    <RequestRowSkeleton />
+                  </>)}
                 {!isLoading && !requests?.length ? <p className="text-xs text-ink-soft p-4 text-center">No suitable requests found at this time.</p> : null}
                 {requests?.map(r => (
                   <div key={r.id}>

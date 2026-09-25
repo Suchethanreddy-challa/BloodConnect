@@ -3,10 +3,11 @@ import { type Role } from "../portal/portal-config";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
+import { RequestRowSkeleton } from "./Skeletons";
 
 export function History({ role }: { role: Role }) {
   const { user } = useAuth();
-  const { data: rows } = useQuery({
+  const { data: rows, isLoading } = useQuery({
     queryKey: ["history", user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -32,8 +33,15 @@ export function History({ role }: { role: Role }) {
         note="A complete record of closed and active activity."
       />
       <div className="space-y-2">
-        {!rows?.length ? <p className="text-xs text-ink-soft p-4">No historical records found.</p> : null}
-        {rows?.map((row) => (
+        {isLoading && (
+          <>
+            <RequestRowSkeleton />
+            <RequestRowSkeleton />
+            <RequestRowSkeleton />
+          </>
+        )}
+        {!isLoading && !rows?.length ? <p className="text-xs text-ink-soft p-4">No historical records found.</p> : null}
+        {!isLoading && rows?.map((row) => (
           <RequestRow
             key={row.id}
             id={row.id.split("-")[0]}

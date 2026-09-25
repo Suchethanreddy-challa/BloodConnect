@@ -311,7 +311,11 @@ export function NearbySearch({ section }: { section: "donors" | "hospitals" | "b
             note="Distances are approximate; private residential locations are never shown."
           />
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-            {isLoading && <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-ink-soft size-6" /></div>}
+            {isLoading && (<div className="space-y-2">
+                <MatchCardSkeleton />
+                <MatchCardSkeleton />
+                <MatchCardSkeleton />
+              </div>)}
             {!isLoading && results?.length === 0 && (
               <p className="text-center text-xs text-ink-soft p-4">No results found nearby.</p>
             )}

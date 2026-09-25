@@ -6,7 +6,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
-      includeAssets: ['favicon.ico']
+      includeAssets: ['favicon.ico'],
+      outDir: ".vercel/output/static"
     })
   ],
   tanstackStart: {

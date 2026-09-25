@@ -58,7 +58,11 @@ export function RequestQueue({ institution }: { institution: "hospital" | "blood
           }
         />
         <div className="space-y-4">
-          {isLoading && <div className="flex justify-center p-8"><Loader2 className="animate-spin text-ink-soft size-6" /></div>}
+          {isLoading && (<div className="space-y-4">
+              <RequestRowSkeleton />
+              <RequestRowSkeleton />
+              <RequestRowSkeleton />
+            </div>)}
           {!isLoading && requests?.length === 0 && (
             <p className="text-center text-xs text-ink-soft p-4">No active requests.</p>
           )}

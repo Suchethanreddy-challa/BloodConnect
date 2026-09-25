@@ -51,12 +51,12 @@ export function Metric({
       className={cn("min-h-28", onClick ? "cursor-pointer hover:bg-white/40 transition-colors" : "")} 
       onClick={onClick}
     >
-      <div className="flex items-center justify-between">
-        <p className="font-mono text-[10px] uppercase tracking-[.12em] text-ink-soft">{label}</p>
-        <span className={cn("size-2 rounded-full", tones[tone])} />
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-mono text-[10px] uppercase tracking-[.12em] text-ink-soft truncate">{label}</p>
+        <span className={cn("size-2 rounded-full shrink-0", tones[tone])} />
       </div>
-      <p className="mt-3 text-3xl font-bold tracking-tight">{value}</p>
-      <p className="mt-1 text-[11px] text-ink-soft">{detail}</p>
+      <p className="mt-3 text-3xl font-bold tracking-tight truncate">{value}</p>
+      <p className="mt-1 text-[11px] text-ink-soft truncate">{detail}</p>
     </Panel>
   );
 }
@@ -165,13 +165,13 @@ export function RequestRow({
       <span className="grid size-11 place-items-center rounded-lg bg-urgent/10 font-mono text-sm font-bold text-urgent">
         {group}
       </span>
-      <div>
+      <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="font-mono text-[11px] font-bold">{id}</p>
-          <StatusBadge status={urgency} />
-          <StatusBadge status={status} />
+          <p className="font-mono text-[11px] font-bold truncate">{id}</p>
+          <div className="shrink-0"><StatusBadge status={urgency} /></div>
+          <div className="shrink-0"><StatusBadge status={status} /></div>
         </div>
-        <p className="mt-1 text-[11px] text-ink-soft">
+        <p className="mt-1 text-[11px] text-ink-soft truncate">
           {patientName ? `${patientName} · ` : ""}{units} units · {location}
         </p>
       </div>

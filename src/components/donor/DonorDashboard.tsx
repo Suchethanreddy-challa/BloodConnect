@@ -131,9 +131,9 @@ export function DonorDashboard() {
                 note="You have committed to fulfilling this request."
               />
               <div className="rounded-lg border border-ok/20 bg-ok/5 p-4">
-                <h4 className="text-sm font-bold text-ok flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="size-4" />
-                  You're helping {activeCommitment.patient?.name || "a patient"}!
+                <h4 className="text-sm font-bold text-ok flex items-center gap-2 mb-2 min-w-0">
+                  <CheckCircle2 className="size-4 shrink-0" />
+                  <span className="truncate">You're helping {activeCommitment.patient?.name || "a patient"}!</span>
                 </h4>
                 <RequestRow
                   id={activeCommitment.id.split('-')[0]}

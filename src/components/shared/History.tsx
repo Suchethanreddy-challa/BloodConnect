@@ -11,9 +11,13 @@ export function History({ role }: { role: Role }) {
     queryFn: async () => {
       if (!user) return [];
       let q = supabase.from("blood_requests").select("*").order("created_at", { ascending: false });
-      if (role === "donor" || role === "blood-bank") q = q.eq("responder_id", user.id);
-      else if (role === "patient") q = q.eq("patient_id", user.id);
-      else if (role === "hospital") q = q.eq("hospital_id", user.id);
+      if (role === "donor" || role === "blood-bank") {
+        q = q.or(`responder_id.eq.${user.id},patient_id.eq.${user.id}`);
+      } else if (role === "hospital") {
+        q = q.or(`hospital_id.eq.${user.id},patient_id.eq.${user.id}`);
+      } else {
+        q = q.eq("patient_id", user.id);
+      }
       const { data, error } = await q;
       if (error) throw error;
       return data || [];

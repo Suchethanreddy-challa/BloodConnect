@@ -23,12 +23,10 @@ export type PortalNavItem = { label: string; section: string; icon: LucideIcon }
 
 export const portalConfig: Record<
   Role,
-  { label: string; user: string; subtitle: string; nav: PortalNavItem[] }
+  { label: string; nav: PortalNavItem[] }
 > = {
   patient: {
     label: "Patient",
-    user: "Aarav Sharma",
-    subtitle: "Care coordination",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
       { label: "Request blood", section: "request", icon: Siren },
@@ -42,8 +40,6 @@ export const portalConfig: Record<
   },
   donor: {
     label: "Donor",
-    user: "Ravi Kumar",
-    subtitle: "O+ · Vizianagaram",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
       { label: "Availability", section: "availability", icon: Activity },
@@ -55,8 +51,6 @@ export const portalConfig: Record<
   },
   hospital: {
     label: "Hospital",
-    user: "City Care Hospital",
-    subtitle: "Verified facility",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
       { label: "Request blood", section: "request", icon: Siren },
@@ -69,8 +63,6 @@ export const portalConfig: Record<
   },
   "blood-bank": {
     label: "Blood Bank",
-    user: "Sunrise Blood Bank",
-    subtitle: "Verified organization",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
       { label: "Request blood", section: "request", icon: Siren },
@@ -83,8 +75,6 @@ export const portalConfig: Record<
   },
   admin: {
     label: "Admin",
-    user: "Platform Operations",
-    subtitle: "Trust & safety",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
       { label: "All users", section: "users", icon: Users },

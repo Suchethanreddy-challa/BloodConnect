@@ -179,7 +179,7 @@ export function Profile({ role }: { role: Role }) {
                 onClick={async () => {
                   const newRole = role === 'patient' ? 'donor' : 'patient';
                   await supabase.from("profiles").update({ role: newRole }).eq("id", user!.id);
-                  window.location.href = `/${newRole}`;
+                  navigate({ to: "/$role", params: { role: newRole } });
                 }}
               >
               Switch to {role === 'patient' ? 'Donor' : 'Patient'}

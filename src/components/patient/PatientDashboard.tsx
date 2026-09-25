@@ -2,6 +2,7 @@
 import { ArrowRight, Siren, Loader2, CheckCircle2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link as RouterLink, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import {
   MatchCard,
   Metric,
@@ -11,13 +12,27 @@ import {
   SectionHead,
   StatusBadge,
 } from "../shared/Widgets";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
 import apDataRaw from "@/lib/ap_data.json";
 
 export function PatientDashboard() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const updateRequest = useMutation({
+    mutationFn: async ({ id, status, responder_id }: { id: string, status: string, responder_id?: string | null }) => {
+      const updateData: any = { status };
+      if (responder_id !== undefined) updateData.responder_id = responder_id;
+      const { error } = await supabase.from('blood_requests').update(updateData).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['active_request'] });
+      toast.success('Request updated successfully');
+    },
+    onError: (err: any) => toast.error(err.message),
+  });
   const navigate = useNavigate();
   
   const { data: request, isLoading } = useQuery({
@@ -169,6 +184,36 @@ export function PatientDashboard() {
                  <Siren />
                </RouterLink>
              </Button>
+          )}
+          {request && (
+            <div className="mt-5 flex gap-2">
+              <Button 
+                className="flex-1 bg-ok hover:bg-ok/90" 
+                onClick={() => updateRequest.mutate({ id: request.id, status: "Fulfilled" })}
+                disabled={updateRequest.isPending}
+              >
+                Mark Fulfilled
+              </Button>
+              {responder ? (
+                <Button 
+                  variant="outline" 
+                  className="flex-1" 
+                  onClick={() => updateRequest.mutate({ id: request.id, status: "Searching", responder_id: null })}
+                  disabled={updateRequest.isPending}
+                >
+                  Donor Cancelled
+                </Button>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  className="flex-1 text-urgent hover:bg-urgent/10 hover:text-urgent" 
+                  onClick={() => updateRequest.mutate({ id: request.id, status: "Cancelled" })}
+                  disabled={updateRequest.isPending}
+                >
+                  Cancel Request
+                </Button>
+              )}
+            </div>
           )}
         </Panel>
         <Panel className="xl:col-span-7">

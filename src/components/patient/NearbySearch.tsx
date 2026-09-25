@@ -18,7 +18,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useAuth } from "@/lib/useAuth";
-import apDataRaw from "@/lib/ap_data.json";
 
 // Fix for default Leaflet markers missing in Vite
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -139,27 +138,6 @@ export function NearbySearch({ section }: { section: "donors" | "hospitals" | "b
           }));
         }
         
-        // Add scraped AP data
-        const localResults = apData.filter(d => {
-          if (roleTarget === "hospital" && d.type !== "hospital") return false;
-          if (roleTarget === "blood-bank" && !(d.name || "").toLowerCase().includes("blood") && d.type !== "blood_bank") return false;
-          if (city && !userLoc) {
-            const search = city.toLowerCase();
-            return (d.city || "").toLowerCase().includes(search) || (d.district || "").toLowerCase().includes(search) || (d.pincode || "").includes(search);
-          }
-          return true;
-        }).map(d => ({
-          id: d.id,
-          name: d.name,
-          blood_group: "All Groups",
-          is_verified: true,
-          lat: d.lat,
-          lng: d.lon,
-          phone: "",
-          source: "Open Data (Unregistered)"
-        }));
-        
-        directoryResults = [...directoryResults, ...localResults];
       }
 
       let profileResults: any[] = [];

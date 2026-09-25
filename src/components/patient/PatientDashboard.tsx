@@ -15,7 +15,6 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
-import apDataRaw from "@/lib/ap_data.json";
 
 export function PatientDashboard() {
   const { user } = useAuth();
@@ -55,14 +54,11 @@ export function PatientDashboard() {
         supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "blood-bank"),
         supabase.from("national_hospitals").select("id", { count: "exact", head: true })
       ]);
-      const apData = apDataRaw as any[];
-      const apHospitals = apData.filter(d => d.type === "hospital").length;
-      const apBanks = apData.filter(d => d.type === "blood_bank").length;
 
       return {
         donors: donors.count || 0,
-        hospitals: (hospitals.count || 0) + (natHospitals.count || 0) + apHospitals,
-        banks: (banks.count || 0) + apBanks
+        hospitals: (hospitals.count || 0) + (natHospitals.count || 0),
+        banks: (banks.count || 0)
       };
     }
   });

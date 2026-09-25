@@ -207,7 +207,7 @@ export function PortalShell({
               placeholder="Search requests, people or IDs"
             />
           </div>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-1 sm:gap-2 shrink-0">
             <div className="relative" ref={noticeRef}>
               <Button
                 variant="ghost"
@@ -219,7 +219,7 @@ export function PortalShell({
                 {notifications && notifications.length > 0 && <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-urgent ring-2 ring-ice" />}
               </Button>
               {noticeOpen && (
-                <div className="glass absolute right-0 top-11 w-80 max-h-[80vh] overflow-y-auto rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
+                <div className="glass absolute right-0 top-11 w-80 max-w-[calc(100vw-2rem)] max-h-[80vh] overflow-y-auto rounded-lg p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
                   <p className="text-xs font-semibold">Recent notifications</p>
                   <div className="mt-2 space-y-2 text-xs">
                     {(!notifications || notifications.length === 0) ? (
@@ -244,11 +244,11 @@ export function PortalShell({
                 className="flex gap-2"
                 onClick={() => { setProfileOpen(!profileOpen); setNoticeOpen(false); }}
               >
-                <span className="grid size-7 place-items-center rounded-full bg-ink text-[10px] text-ice">
+                <span className="grid size-7 place-items-center rounded-full bg-ink text-[10px] text-ice shrink-0">
                   {(profile?.name || user?.user_metadata?.full_name || user?.email || "U").slice(0, 2).toUpperCase()}
                 </span>
-                <span className="max-w-32 truncate text-xs">{profile?.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</span>
-                <ChevronDown className="size-3" />
+                <span className="max-w-32 truncate text-xs hidden sm:inline-block">{profile?.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</span>
+                <ChevronDown className="size-3 shrink-0 opacity-50" />
               </Button>
               
               {profileOpen && (

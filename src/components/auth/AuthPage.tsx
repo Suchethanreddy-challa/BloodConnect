@@ -53,111 +53,53 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
   
   const [apiFailed, setApiFailed] = useState(false);
 
-  // Set Districts when State changes
+  // Fetch from Postal Pincode API
   useEffect(() => {
-    if (!stateName) {
-      setDistricts([]);
-      setDistrict("");
-      return;
-    }
-    
-    // Instantly load districts from static reliable location data
-    const localDistricts = getDistrictsForState(stateName);
-    if (localDistricts && localDistricts.length > 0) {
-      setDistricts(localDistricts);
-      setDistrict("");
-      setIsLoadingDistricts(false);
-      setApiFailed(false);
-    } else {
-      setIsLoadingDistricts(true);
-      fetch(`https://api.data.gov.in/resource/${RESOURCE_ID}?api-key=${API_KEY}&format=json&limit=10000&filters[statename]=${encodeURIComponent(stateName)}`)
+    if (pincode && pincode.length === 6) {
+      setIsLoadingVillages(true);
+      fetch(`https://api.postalpincode.in/pincode/${pincode}`)
         .then(res => res.json())
         .then(data => {
-          if (data && data.records) {
-            const uniqueDistricts = Array.from(new Set(data.records.map((r: any) => r.district))).filter(Boolean).sort() as string[];
-            if (uniqueDistricts.length === 0) {
-              setApiFailed(true);
-            } else {
-              setDistricts(uniqueDistricts);
-              setApiFailed(false);
-            }
-            setDistrict("");
+          if (data && data[0] && data[0].Status === "Success") {
+            const offices = data[0].PostOffice;
+            setStateName(offices[0].State);
+            setDistrict(offices[0].District);
+            
+            const formatted = offices.map((o: any) => ({
+              officename: o.Name,
+              pincode: o.Pincode
+            }));
+            
+            setVillages(formatted);
+            setVillage(formatted[0].officename);
+            setApiFailed(false);
           } else {
+            setVillages([]);
             setApiFailed(true);
           }
         })
-        .catch((err) => {
-          console.error(err);
-          setApiFailed(true);
-        })
-        .finally(() => setIsLoadingDistricts(false));
-    }
-  }, [stateName]);
-
-  // Fetch Villages when District changes
-  useEffect(() => {
-    if (!district || !stateName) {
+        .finally(() => setIsLoadingVillages(false));
+    } else {
       setVillages([]);
-      setVillage("");
-      setPincode("");
-      return;
     }
-    
-    // If we're in manual typing mode and the user is typing, we might not want to aggressively fetch and flip the UI back.
-    // However, trying to fetch villages is fine, we just update the village list.
-    setIsLoadingVillages(true);
-    
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
-
-    fetch(`https://api.data.gov.in/resource/${RESOURCE_ID}?api-key=${API_KEY}&format=json&limit=10000&filters[statename]=${encodeURIComponent(stateName)}&filters[district]=${encodeURIComponent(district)}`, {
-      signal: controller.signal
-    })
-      .then(res => res.json())
-      .then(data => {
-        clearTimeout(timeoutId);
-        if (data && data.records && data.records.length > 0) {
-          setVillages(data.records.sort((a: any, b: any) => a.officename.localeCompare(b.officename)));
-          // Only reset apiFailed if we were waiting on an API failure. If the user clicked "Type manually", 
-          // flipping this automatically might interrupt them. But since we have villages now, it's safer to not touch apiFailed here.
-        } else {
-          setVillages([]);
-        }
-        setVillage("");
-        setPincode("");
-      })
-      .catch((err) => {
-        clearTimeout(timeoutId);
-        console.warn("Village fetch note:", err);
-      })
-      .finally(() => setIsLoadingVillages(false));
-
-    return () => clearTimeout(timeoutId);
-  }, [district, stateName]);
-
-  // Auto-fill pincode when village is selected
-  useEffect(() => {
-    if (village && villages.length > 0) {
-      const selectedRec = villages.find(v => v.officename === village);
-      if (selectedRec) {
-        setPincode(selectedRec.pincode);
-      }
-    }
-  }, [village, villages]);
+  }, [pincode]);
 
   useEffect(() => {
     if (mode === "complete") {
       supabase.auth.getUser().then(({ data: { user } }) => {
         if (user) {
           supabase.from("profiles").select("*").eq("id", user.id).single().then(({ data }) => {
-            if (data) {
-              if (data.pincode && data.city && data.phone) {
-                // Profile is already complete! Auto-redirect to dashboard.
-                navigate({ to: "/$role", params: { role: data.role || "patient" }, replace: true });
-              } else {
+            if (data && data.pincode && data.city && data.phone) {
+              // Profile is already complete! Auto-redirect to dashboard.
+              navigate({ to: "/$role", params: { role: data.role || "patient" }, replace: true });
+            } else {
+              if (data) {
                 setRole(data.role || "patient");
                 setName(data.name || "");
                 setBloodGroup(data.blood_group || "");
+              } else {
+                // Completely new user from Google
+                setName(user.user_metadata?.full_name || "");
               }
             }
           });
@@ -395,64 +337,30 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="state" className="text-xs">State</Label>
-                      <select 
-                        id="state" 
+                      <Label htmlFor="pincode" className="text-xs">
+                        Pincode {isLoadingVillages && <span className="text-cool animate-pulse">(Searching...)</span>}
+                      </Label>
+                      <Input 
+                        id="pincode" 
                         required 
-                        value={stateName} 
-                        onChange={e => setStateName(e.target.value)} 
-                        className="flex h-9 w-full rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-1 bg-white/60"
-                      >
-                        <option value="" disabled>Select State...</option>
-                        {INDIAN_STATES.map((st) => (
-                          <option key={st} value={st}>{st}</option>
-                        ))}
-                      </select>
+                        maxLength={6}
+                        value={pincode} 
+                        onChange={e => setPincode(e.target.value)} 
+                        placeholder="6-digit Pincode" 
+                        className="mt-1 bg-white/60 font-mono" 
+                      />
                     </div>
                     <div>
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="district" className="text-xs">
-                          District {isLoadingDistricts && <span className="text-cool animate-pulse">(Loading...)</span>}
-                        </Label>
+                        <Label htmlFor="village" className="text-xs">Village / Area</Label>
                         <button 
                           type="button" 
                           onClick={() => setApiFailed(!apiFailed)} 
                           className="text-[10px] text-cool hover:underline focus:outline-none"
                         >
-                          {apiFailed ? "Select from list" : "Type manually"}
+                          {apiFailed || villages.length === 0 ? "Select from list" : "Type manually"}
                         </button>
                       </div>
-                      {apiFailed ? (
-                        <Input 
-                          id="district" 
-                          required 
-                          value={district} 
-                          onChange={e => setDistrict(e.target.value)} 
-                          placeholder="Type your district" 
-                          className="mt-1 bg-white/60" 
-                        />
-                      ) : (
-                        <select 
-                          id="district" 
-                          required 
-                          value={district} 
-                          onChange={e => setDistrict(e.target.value)} 
-                          disabled={!stateName || isLoadingDistricts}
-                          className="flex h-9 w-full rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-1 bg-white/60 disabled:opacity-50"
-                        >
-                          <option value="" disabled>Select District...</option>
-                          {districts.map((dst) => (
-                            <option key={dst} value={dst}>{dst}</option>
-                          ))}
-                        </select>
-                      )}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="village" className="text-xs">
-                        Village / Area {isLoadingVillages && <span className="text-cool animate-pulse">(Loading...)</span>}
-                      </Label>
                       {apiFailed || villages.length === 0 ? (
                         <Input 
                           id="village" 
@@ -468,26 +376,36 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
                           required 
                           value={village} 
                           onChange={e => setVillage(e.target.value)}
-                          disabled={!district || isLoadingVillages} 
-                          className="flex h-9 w-full rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-1 bg-white/60 disabled:opacity-50"
+                          className="flex h-9 w-full rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-1 bg-white/60"
                         >
-                          <option value="" disabled>Select Village...</option>
                           {villages.map((loc, i) => (
                             <option key={i} value={loc.officename}>{loc.officename}</option>
                           ))}
                         </select>
                       )}
                     </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="pincode" className="text-xs">Pincode</Label>
+                      <Label htmlFor="state" className="text-xs">State</Label>
                       <Input 
-                        id="pincode" 
+                        id="state" 
                         required 
-                        readOnly={!apiFailed && villages.length > 0} 
-                        value={pincode} 
-                        onChange={e => setPincode(e.target.value)} 
-                        placeholder={!apiFailed && villages.length > 0 ? "Auto-filled" : "Enter pincode"} 
-                        className="mt-1 bg-white/60 text-ink-soft font-mono" 
+                        value={stateName} 
+                        onChange={e => setStateName(e.target.value)} 
+                        placeholder="State"
+                        className="mt-1 bg-white/60"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="district" className="text-xs">District</Label>
+                      <Input 
+                        id="district" 
+                        required 
+                        value={district} 
+                        onChange={e => setDistrict(e.target.value)} 
+                        placeholder="District" 
+                        className="mt-1 bg-white/60" 
                       />
                     </div>
                   </div>

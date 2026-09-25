@@ -25,38 +25,48 @@ export function ReviewQueue({ suspicious }: { suspicious: boolean }) {
   const [reason, setReason] = useState("");
 
   const { data: reports, isLoading } = useQuery({
-    queryKey: ["admin_reports"],
+    queryKey: ["admin_reports", suspicious],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("reports")
-        .select(`
-          *,
-          reporter:profiles!reporter_id(name, email),
-          reported:profiles!reported_user_id(name, email)
-        `)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
+      if (suspicious) {
+        const { data, error } = await supabase
+          .from("suspicious_flags")
+          .select(`*, reported:profiles!user_id(name, email)`)
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return data;
+      } else {
+        const { data, error } = await supabase
+          .from("reports")
+          .select(`
+            *,
+            reporter:profiles!reporter_id(name, email),
+            reported:profiles!reported_user_id(name, email)
+          `)
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return data;
+      }
     }
   });
 
   const updateReport = useMutation({
     mutationFn: async ({ id, status, decision }: { id: string, status: string, decision: string }) => {
-      const { error } = await supabase.from("reports").update({ status }).eq("id", id);
+      const table = suspicious ? "suspicious_flags" : "reports";
+      const { error } = await supabase.from(table).update({ status, decision }).eq("id", id);
       if (error) throw error;
       
       if (user) {
         await supabase.from("audit_logs").insert({
           admin_id: user.id,
-          action: `Report ${status}: ${decision}`,
-          target_type: 'report',
+          action: `${suspicious ? 'Flag' : 'Report'} ${status}: ${decision}`,
+          target_type: suspicious ? 'flag' : 'report',
           target_id: id,
           details: { reason: decision }
         });
       }
     },
     onSuccess: () => {
-      toast.success("Report updated and logged");
+      toast.success("Action recorded and logged");
       setReason("");
       queryClient.invalidateQueries({ queryKey: ["admin_reports"] });
       queryClient.invalidateQueries({ queryKey: ["admin_audit_logs"] });

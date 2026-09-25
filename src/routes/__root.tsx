@@ -13,6 +13,7 @@ import { supabase } from "../lib/supabase";
 import { AuthProvider } from "../lib/useAuth";
 import appCss from "../styles.css?url";
 import { Toaster } from "../components/ui/sonner";
+import { toast } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -127,6 +128,14 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.includes("error_code=otp_expired")) {
+      setTimeout(() => {
+        toast.error("Your reset link has expired. Please request a new one.");
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      }, 500);
+    }
+
     const channel = supabase
       .channel('schema-db-changes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'blood_requests' }, (payload) => {

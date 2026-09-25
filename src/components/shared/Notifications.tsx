@@ -14,7 +14,7 @@ export function Notifications() {
     queryKey: ["notifications", user?.id],
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase.from("blood_requests").select("*").order("updated_at", { ascending: false }).limit(4);
+      const { data, error } = await supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(10);
       if (error) throw error;
       return data || [];
     },
@@ -48,9 +48,9 @@ export function Notifications() {
             />
             <div>
               <p className={`text-xs ${read.includes(x.id) ? "text-ink-soft" : "font-semibold"}`}>
-                Request {x.id.split("-")[0]} is currently marked as {x.status}.
+                {x.title}: {x.message}
               </p>
-              <p className="mt-1 text-[10px] text-ink-soft">{new Date(x.updated_at ?? x.created_at).toLocaleString()}</p>
+              <p className="mt-1 text-[10px] text-ink-soft">{new Date(x.created_at).toLocaleString()}</p>
             </div>
           </button>
         ))}

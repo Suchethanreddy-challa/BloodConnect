@@ -42,8 +42,9 @@ export const portalConfig: Record<
     label: "Donor",
     nav: [
       { label: "Dashboard", section: "", icon: LayoutDashboard },
+      { label: "Request blood", section: "request", icon: Siren },
       { label: "Availability", section: "availability", icon: Activity },
-      { label: "Blood requests", section: "requests", icon: Siren },
+      { label: "Blood requests", section: "requests", icon: HeartHandshake },
       { label: "Donation history", section: "history", icon: History },
       { label: "Notifications", section: "notifications", icon: Bell },
       { label: "Profile", section: "profile", icon: UserRound },

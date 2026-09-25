@@ -163,6 +163,27 @@ export function Profile({ role }: { role: Role }) {
           <ToggleLine label="Email notifications" initial />
           <ToggleLine label="Emergency alerts" initial />
         </div>
+        
+        {["patient", "donor"].includes(role) && (
+          <div className="mt-6 rounded-lg border border-ink/10 bg-white/50 p-4">
+            <h4 className="text-xs font-semibold text-ink">Account type</h4>
+            <p className="mt-1 text-[11px] text-ink-soft mb-3">
+              Currently acting as a <strong>{role}</strong>. You can switch roles to {role === 'patient' ? 'donate blood' : 'request blood'} as an individual.
+            </p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full"
+              onClick={async () => {
+                const newRole = role === 'patient' ? 'donor' : 'patient';
+                await supabase.from("profiles").update({ role: newRole }).eq("id", user!.id);
+                window.location.href = `/${newRole}`;
+              }}
+            >
+              Switch to {role === 'patient' ? 'Donor' : 'Patient'}
+            </Button>
+          </div>
+        )}
       </Panel>
     </div>
   );

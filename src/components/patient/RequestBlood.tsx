@@ -146,7 +146,7 @@ export function RequestBlood() {
               </Select>
             </Field>
             <Field label="Units required">
-              <Input required className={field} type="number" min="1" value={units} onChange={e => setUnits(parseInt(e.target.value))} />
+              <Input required className={field} type="number" min="1" value={units || ""} onChange={e => setUnits(e.target.value ? parseInt(e.target.value) : 0)} />
             </Field>
             <Field label="Urgency">
               <Select required value={urgency} onValueChange={setUrgency}>

@@ -51,6 +51,7 @@ export function CompatibleRequests() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["compatible_requests"] });
+      queryClient.invalidateQueries({ queryKey: ["history"] });
     },
     onError: (err: any) => toast.error(err.message),
   });

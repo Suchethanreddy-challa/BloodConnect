@@ -166,6 +166,21 @@ export function Profile({ role }: { role: Role }) {
           <ToggleLine label="Emergency alerts" initial />
         </div>
         
+        <div className="mt-6 border-t border-ink/10 pt-6">
+          <Button 
+            variant="outline" 
+            className="w-full text-xs" 
+            onClick={async () => {
+              if (!user?.email) return;
+              const { error } = await supabase.auth.resetPasswordForEmail(user.email, { redirectTo: `${window.location.origin}/reset-password` });
+              if (error) toast.error(error.message);
+              else toast.success("Password reset instructions sent to your email!");
+            }}
+          >
+            Change Password
+          </Button>
+        </div>
+        
         {["patient", "donor"].includes(role) && (
           <div className="mt-6 rounded-lg border border-ink/10 bg-white/50 p-4">
             <h4 className="text-xs font-semibold text-ink">Account type</h4>

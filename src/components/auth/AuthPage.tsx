@@ -423,7 +423,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" | "forgot" | "re
                   </div>
                 </>
               )}
-              {(mode === "login" || mode === "register") && (
+              {(mode === "login" || mode === "register" || mode === "forgot") && (
                 <div>
                   <div className="flex items-center justify-between">
                     <Label htmlFor="email" className="text-xs">

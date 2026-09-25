@@ -175,6 +175,16 @@ export function PatientDashboard() {
               <p className="text-sm flex items-center gap-1 mt-1 font-mono">
                 <Phone className="size-3" /> {responder.phone || "No phone provided"}
               </p>
+              {responder.phone && (
+                <div className="flex gap-2 mt-4">
+                  <Button asChild size="sm" className="flex-1 h-8 bg-ok hover:bg-ok/90">
+                    <a href={`tel:${responder.phone}`}>Call</a>
+                  </Button>
+                  <Button asChild size="sm" variant="outline" className="flex-1 h-8">
+                    <a href={`https://wa.me/${responder.phone.replace(/\D/g, '')}?text=${encodeURIComponent('Hello! I am reaching out regarding the urgent BloodConnect request.')}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                  </Button>
+                </div>
+              )}
             </div>
           )}
           {request && !responder && (

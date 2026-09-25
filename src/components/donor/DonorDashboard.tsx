@@ -23,6 +23,17 @@ export function DonorDashboard() {
   const navigate = useNavigate();
   const [available, setAvailable] = useState(true);
 
+  const { data: activeCommitment, isLoading: loadingCommitment } = useQuery({
+    queryKey: ['donor_active_commitment', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase.from('blood_requests').select('*, patient:profiles!blood_requests_patient_id_fkey(name, phone)').eq('responder_id', user.id).eq('status', 'Contacted').limit(1).maybeSingle();
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    },
+    enabled: !!user
+  });
+
   const { data: requests, isLoading } = useQuery({
     queryKey: ["suitable_requests", profile?.blood_group],
     queryFn: async () => {
@@ -47,7 +58,7 @@ export function DonorDashboard() {
 
   const acceptRequest = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("blood_requests").update({ donor_id: user!.id, status: "Donor Accepted" }).eq("id", id);
+      const { error } = await supabase.from("blood_requests").update({ responder_id: user!.id, status: "Contacted" }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -111,38 +122,75 @@ export function DonorDashboard() {
         </div>
       </div>
       <div className="mt-4 grid gap-4 xl:grid-cols-12">
+        
         <Panel className="xl:col-span-8">
-          <SectionHead
-            title="Suitable nearby requests"
-            note="Only necessary coordination details are shown"
-          />
-          <div className="space-y-2">
-            {isLoading && <p className="text-xs text-ink-soft p-4 text-center">Loading...</p>}
-            {!isLoading && !requests?.length ? <p className="text-xs text-ink-soft p-4 text-center">No suitable requests found at this time.</p> : null}
-            {requests?.map(r => (
-              <div key={r.id}>
+          {activeCommitment ? (
+            <>
+              <SectionHead
+                title="Active Commitment"
+                note="You have committed to fulfilling this request."
+              />
+              <div className="rounded-lg border border-ok/20 bg-ok/5 p-4">
+                <h4 className="text-sm font-bold text-ok flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="size-4" />
+                  You're helping {activeCommitment.patient?.name || "a patient"}!
+                </h4>
                 <RequestRow
-                  id={r.id.split("-")[0]}
-                  group={r.blood_group}
-                  units={r.units}
-                  location={r.location}
-                  status={r.status}
-                  timestamp={r.created_at}
+                  id={activeCommitment.id.split('-')[0]}
+                  group={activeCommitment.blood_group}
+                  units={activeCommitment.units}
+                  location={activeCommitment.location}
+                  status={activeCommitment.status}
+                  timestamp={activeCommitment.created_at}
                 />
-                <div className="flex justify-end pt-2">
-                  <Button
-                    size="sm"
-                    className="h-8"
-                    onClick={() => acceptRequest.mutate(r.id)}
-                    disabled={acceptRequest.isPending}
-                  >
-                    Accept Request
-                  </Button>
-                </div>
+                {activeCommitment.patient?.phone && (
+                  <div className="flex gap-2 mt-4">
+                    <Button asChild size="sm" className="flex-1 h-8 bg-ok hover:bg-ok/90">
+                      <a href={`tel:${activeCommitment.patient.phone}`}>Call Patient</a>
+                    </Button>
+                    <Button asChild size="sm" variant="outline" className="flex-1 h-8">
+                      <a href={`https://wa.me/${activeCommitment.patient.phone.replace(/\D/g, '')}?text=${encodeURIComponent('Hello! I am the donor reaching out regarding your BloodConnect request.')}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    </Button>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <>
+              <SectionHead
+                title="Suitable nearby requests"
+                note="Only necessary coordination details are shown"
+              />
+              <div className="space-y-2">
+                {isLoading && <p className="text-xs text-ink-soft p-4 text-center">Loading...</p>}
+                {!isLoading && !requests?.length ? <p className="text-xs text-ink-soft p-4 text-center">No suitable requests found at this time.</p> : null}
+                {requests?.map(r => (
+                  <div key={r.id}>
+                    <RequestRow
+                      id={r.id.split('-')[0]}
+                      group={r.blood_group}
+                      units={r.units}
+                      location={r.location}
+                      status={r.status}
+                      timestamp={r.created_at}
+                    />
+                    <div className="flex justify-end pt-2">
+                      <Button
+                        size="sm"
+                        className="h-8 bg-ok hover:bg-ok/90"
+                        onClick={() => acceptRequest.mutate(r.id)}
+                        disabled={acceptRequest.isPending}
+                      >
+                        I can help
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </Panel>
+
         <Panel className="xl:col-span-4">
           <SectionHead title="Recent activity" />
           <div className="space-y-4 text-xs">

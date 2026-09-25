@@ -101,7 +101,7 @@ export class PriorityQueue<T> {
 
   dequeue(): T | null {
     if (this.heap.length === 0) return null;
-    const min = this.heap[0];
+    const min = this.heap[0]!;
     const end = this.heap.pop()!;
     if (this.heap.length > 0) {
       this.heap[0] = end;
@@ -115,10 +115,10 @@ export class PriorityQueue<T> {
   }
 
   private bubbleUp(idx: number) {
-    const element = this.heap[idx];
+    const element = this.heap[idx]!;
     while (idx > 0) {
       const parentIdx = Math.floor((idx - 1) / 2);
-      const parent = this.heap[parentIdx];
+      const parent = this.heap[parentIdx]!;
       if (element.priority >= parent.priority) break; // Min-Heap: smaller priority number = higher urgency/better match
       this.heap[parentIdx] = element;
       this.heap[idx] = parent;
@@ -128,7 +128,7 @@ export class PriorityQueue<T> {
 
   private sinkDown(idx: number) {
     const length = this.heap.length;
-    const element = this.heap[idx];
+    const element = this.heap[idx]!;
     while (true) {
       const leftChildIdx = 2 * idx + 1;
       const rightChildIdx = 2 * idx + 2;
@@ -136,13 +136,13 @@ export class PriorityQueue<T> {
       let swap = null;
 
       if (leftChildIdx < length) {
-        leftChild = this.heap[leftChildIdx];
+        leftChild = this.heap[leftChildIdx]!;
         if (leftChild.priority < element.priority) {
           swap = leftChildIdx;
         }
       }
       if (rightChildIdx < length) {
-        rightChild = this.heap[rightChildIdx];
+        rightChild = this.heap[rightChildIdx]!;
         if (
           (swap === null && rightChild.priority < element.priority) ||
           (swap !== null && rightChild.priority < leftChild!.priority)
@@ -151,7 +151,7 @@ export class PriorityQueue<T> {
         }
       }
       if (swap === null) break;
-      this.heap[idx] = this.heap[swap];
+      this.heap[idx] = this.heap[swap]!;
       this.heap[swap] = element;
       idx = swap;
     }
